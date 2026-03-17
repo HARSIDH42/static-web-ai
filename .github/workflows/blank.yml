@@ -12,6 +12,7 @@ jobs:
       contents: write
 
     steps:
+
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -48,7 +49,7 @@ jobs:
           IMPORTANT RULES
           - Replace every instance of "page" with "NovaCart"
           - Do NOT use any images
-          - Use elegant CSS placeholders for product visuals
+          - Use CSS placeholders for product visuals
 
           FUNCTIONALITY
           - Add to Bag (localStorage)
@@ -60,15 +61,15 @@ jobs:
           - Vanilla JavaScript only
           - All JS inside <script>
 
-          DESIGN REQUIREMENTS
+          DESIGN
           - Large hero section
           - Glassmorphism sticky header
           - Responsive CSS grid
           - Modern typography
-          - Premium minimalist design
+          - Premium minimalist layout
 
           OUTPUT
-          Return ONLY a full working index.html file.
+          Return ONLY a complete working index.html file.
           """
 
           client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
@@ -81,13 +82,16 @@ jobs:
           html = response.text
 
           if not html:
-              print("Gemini returned empty output")
+              print("Gemini returned empty response")
               exit(1)
 
-          # Always write to index.html
-          Path("index.html").write_text(html.strip(), encoding="utf-8")
+          # Remove markdown formatting if Gemini adds it
+          html = html.replace("```html", "").replace("```", "").strip()
 
-          # Git setup
+          # Write index.html
+          Path("index.html").write_text(html, encoding="utf-8")
+
+          # Git configuration
           subprocess.run(["git","config","--global","user.name","gemini-bot"])
           subprocess.run(["git","config","--global","user.email","bot@example.com"])
 
@@ -112,6 +116,6 @@ jobs:
       - name: Deploy to S3
         run: |
           aws s3 sync . s3://staticwebzsitegit \
-            --exclude "*" \
-            --include "index.html" \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
             --delete
