@@ -1,4 +1,4 @@
-name: Gemini AI Full Website Generator + Deploy
+name: Gemini AI Auto Commit and Deploy
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  ai-generate-deploy:
+  ai-commit-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -18,7 +18,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -26,7 +26,7 @@ jobs:
       - name: Install Gemini SDK
         run: pip install --upgrade google-genai
 
-      - name: Generate Full Website using Gemini
+      - name: Generate Website with Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
@@ -36,19 +36,7 @@ jobs:
           from pathlib import Path
           from google import genai
 
-          repo = Path(".")
-          images = Path("images")
-
-          # Collect image list
-          image_list = []
-          if images.exists():
-              for img in images.glob("*"):
-                  if img.suffix.lower() in [".jpg",".jpeg",".png",".webp"]:
-                      image_list.append(img.name)
-
-          image_list_text = "\n".join(image_list)
-
-          prompt = f"""
+          prompt = """
           ROLE
           You are a senior frontend engineer building a premium 2026 modern e-commerce storefront.
 
@@ -58,69 +46,32 @@ jobs:
           WEBSITE IDEA
           A premium Smart Gadgets Store selling modern tech accessories.
 
-          AVAILABLE IMAGES
-          {image_list_text}
-
-          IMAGE RULES
-          - Use ONLY these images
-          - Image path must be: images/FILENAME
-          - Do not invent filenames
-
-          REQUIRED FILES
-          index.html
-          products.html
-          product.html
-          cart.html
-          checkout.html
-          styles.css
-          app.js
+          IMPORTANT RULES
+          - Replace every instance of "page" with "NovaCart"
+          - Do NOT use any images
+          - Use CSS placeholders for product visuals
 
           FUNCTIONALITY
-          - Add to cart (localStorage)
+          - Add to Bag (localStorage)
           - Live cart counter
-          - Cart drawer
-          - Product search
-          - Product filtering
-          - Quantity control
-          - Remove from cart
-          - Fully responsive
-          - SPA feel without reload
+          - Animated cart drawer
+          - Quantity increment & removal
+          - Live search filtering
+          - No page reload
+          - Vanilla JavaScript only
+          - All JS inside <script>
+          - Give discription to the products
+          - functionality that is common for all e-commerce websites
 
           DESIGN
-          - Glassmorphism navbar
-          - Premium hero
-          - Responsive product grid
-          - Minimalist luxury design
-          - Smooth animations
-          - Clean typography
+          - Large hero section
+          - Glassmorphism sticky header
+          - Responsive CSS grid
+          - Modern typography
+          - Premium minimalist layout
 
-          JAVASCRIPT
-          - Vanilla JS only
-          - All functionality in app.js
-
-          OUTPUT FORMAT
-          Return files exactly like this:
-
-          FILE: index.html
-          <html code>
-
-          FILE: products.html
-          <html code>
-
-          FILE: product.html
-          <html code>
-
-          FILE: cart.html
-          <html code>
-
-          FILE: checkout.html
-          <html code>
-
-          FILE: styles.css
-          <css code>
-
-          FILE: app.js
-          <javascript code>
+          OUTPUT
+          Return ONLY a complete working index.html file.
           """
 
           client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
@@ -130,40 +81,28 @@ jobs:
               contents=prompt
           )
 
-          text = response.text
+          html = response.text
 
-          if not text:
-              print("Gemini returned empty output")
+          if not html:
+              print("Gemini returned empty response")
               exit(1)
 
-          text = text.replace("```","")
+          # Remove markdown formatting if Gemini adds it
+          html = html.replace("```html", "").replace("```", "").strip()
 
-          current_file = None
-          content = []
+          # Write index.html
+          Path("index.html").write_text(html, encoding="utf-8")
 
-          for line in text.splitlines():
-
-              if line.startswith("FILE:"):
-                  if current_file:
-                      Path(current_file).write_text("\n".join(content),encoding="utf-8")
-
-                  current_file = line.replace("FILE:","").strip()
-                  content = []
-              else:
-                  content.append(line)
-
-          if current_file:
-              Path(current_file).write_text("\n".join(content),encoding="utf-8")
-
+          # Git configuration
           subprocess.run(["git","config","--global","user.name","gemini-bot"])
           subprocess.run(["git","config","--global","user.email","bot@example.com"])
 
-          subprocess.run(["git","add","."])
+          subprocess.run(["git","add","index.html"])
 
           result = subprocess.run(["git","diff","--cached","--quiet"])
 
           if result.returncode != 0:
-              subprocess.run(["git","commit","-m","Gemini AI generated full NovaCart storefront"])
+              subprocess.run(["git","commit","-m","Gemini AI generated NovaCart UI"])
               subprocess.run(["git","push"])
           else:
               print("No changes detected")
@@ -176,7 +115,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Deploy Website to S3
+      - name: Deploy to S3
         run: |
           aws s3 sync . s3://staticwebzsitegit \
             --exclude ".git/*" \
