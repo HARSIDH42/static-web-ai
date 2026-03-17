@@ -23,20 +23,69 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Gemini SDK
-        run: pip install --upgrade google-genai
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade google-genai requests
 
-      - name: Generate Website with Gemini
+      - name: Generate Images and Website with Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python << 'EOF'
+
           import os
           import subprocess
+          import requests
           from pathlib import Path
           from google import genai
 
-          prompt = """
+          # -----------------------------
+          # CREATE IMAGE DIRECTORY
+          # -----------------------------
+
+          img_dir = Path("assets/images/products")
+          img_dir.mkdir(parents=True, exist_ok=True)
+
+          products = [
+              "futuristic wireless earbuds",
+              "smart fitness watch",
+              "premium mechanical keyboard",
+              "minimalist wireless mouse",
+              "AI smart home speaker",
+              "RGB gaming headset",
+              "portable bluetooth speaker",
+              "smartphone gimbal stabilizer"
+          ]
+
+          image_names = []
+
+          print("Generating AI images...")
+
+          for i, product in enumerate(products,1):
+
+              filename = f"product{i}.png"
+              path = img_dir / filename
+
+              url = f"https://image.pollinations.ai/prompt/{product}?width=800&height=800"
+
+              img = requests.get(url).content
+              path.write_bytes(img)
+
+              image_names.append(filename)
+
+          print("Images generated")
+
+          # -----------------------------
+          # PREPARE IMAGE LIST FOR PROMPT
+          # -----------------------------
+
+          image_list = "\n".join(image_names)
+
+          # -----------------------------
+          # GEMINI PROMPT
+          # -----------------------------
+
+          prompt = f"""
           ROLE
           You are a senior frontend engineer building a premium 2026 modern e-commerce storefront.
 
@@ -47,9 +96,10 @@ jobs:
           A premium Smart Gadgets Store selling modern tech accessories.
 
           IMPORTANT RULES
-          - Replace every instance of "page" with "NovaCart"
-          - Do NOT use any images
-          - Use CSS placeholders for product visuals
+          - All images must come from assets/images/products/
+          - Use only these images:
+          {image_list}
+          - Image paths must be relative
 
           FUNCTIONALITY
           - Add to Bag (localStorage)
@@ -60,24 +110,25 @@ jobs:
           - No page reload
           - Vanilla JavaScript only
           - All JS inside <script>
-          - Give discription to the products
-          - functionality that is common for all e-commerce websites
 
           DESIGN
           - Large hero section
           - Glassmorphism sticky header
           - Responsive CSS grid
-          - Modern typography
-          - Premium minimalist layout
+          - Premium minimalist UI
+          - Product cards
+          - Smooth hover animations
 
           OUTPUT
           Return ONLY a complete working index.html file.
           """
 
+          print("Generating HTML with Gemini...")
+
           client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
           response = client.models.generate_content(
-              model="gemini-3-flash-preview",
+              model="gemini-2.0-flash",
               contents=prompt
           )
 
@@ -87,25 +138,29 @@ jobs:
               print("Gemini returned empty response")
               exit(1)
 
-          # Remove markdown formatting if Gemini adds it
-          html = html.replace("```html", "").replace("```", "").strip()
+          html = html.replace("```html","").replace("```","").strip()
 
-          # Write index.html
-          Path("index.html").write_text(html, encoding="utf-8")
+          Path("index.html").write_text(html,encoding="utf-8")
 
-          # Git configuration
+          print("index.html generated")
+
+          # -----------------------------
+          # GIT CONFIG
+          # -----------------------------
+
           subprocess.run(["git","config","--global","user.name","gemini-bot"])
           subprocess.run(["git","config","--global","user.email","bot@example.com"])
 
-          subprocess.run(["git","add","index.html"])
+          subprocess.run(["git","add","."])
 
           result = subprocess.run(["git","diff","--cached","--quiet"])
 
           if result.returncode != 0:
-              subprocess.run(["git","commit","-m","Gemini AI generated NovaCart UI"])
+              subprocess.run(["git","commit","-m","AI generated NovaCart website with images"])
               subprocess.run(["git","push"])
           else:
               print("No changes detected")
+
           EOF
 
       - name: Configure AWS Credentials
