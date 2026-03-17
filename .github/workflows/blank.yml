@@ -60,6 +60,7 @@ jobs:
           - No page reload
           - Vanilla JavaScript only
           - All JS inside <script>
+          - Give discription to the products
 
           DESIGN
           - Large hero section
