@@ -61,6 +61,7 @@ jobs:
           - Vanilla JavaScript only
           - All JS inside <script>
           - Give discription to the products
+          - functionality that is common for all e-commerce websites
 
           DESIGN
           - Large hero section
