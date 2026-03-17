@@ -3,876 +3,554 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NovaCart - Premium Smart Gadgets</title>
-    <!-- Modern Typography: Poppins from Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>NovaCart | Premium Tech Store</title>
     <style>
-        /* CSS Variables for a Premium Minimalist Layout */
         :root {
-            --primary-color: #2c3e50; /* Dark blue-grey */
-            --secondary-color: #3498db; /* Bright blue */
-            --accent-color: #e74c3c; /* Red for alerts/remove */
-            --text-color: #333;
-            --light-text-color: #f8f8f8;
-            --background-color: #f0f2f5; /* Light grey background */
-            --card-background: #ffffff;
-            --border-color: #e0e0e0;
-            --shadow-light: rgba(0, 0, 0, 0.08);
-            --shadow-medium: rgba(0, 0, 0, 0.15);
-            --glass-background: rgba(255, 255, 255, 0.15); /* For glassmorphism */
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --radius-small: 8px;
-            --radius-medium: 12px;
-            --radius-large: 50px;
+            --bg: #050505;
+            --surface: #121212;
+            --accent: #0071e3;
+            --text-main: #f5f5f7;
+            --text-dim: #86868b;
+            --glass: rgba(20, 20, 20, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+            --radius-lg: 24px;
+            --radius-md: 12px;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Global Resets */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--text-color);
-            background-color: var(--background-color);
-            line-height: 1.6;
-            scroll-behavior: smooth;
+            background-color: var(--bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.5;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        /* Glassmorphism Sticky Header */
+        /* Glassmorphism Header */
         header {
-            position: sticky;
+            position: fixed;
             top: 0;
-            z-index: 1000;
+            width: 100%;
+            height: 80px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 1rem 3rem;
-            background: var(--glass-background); /* Semi-transparent white */
-            backdrop-filter: blur(10px); /* Glassmorphism effect */
-            -webkit-backdrop-filter: blur(10px); /* Safari support */
-            border-bottom: 1px solid var(--glass-border);
-            box-shadow: 0 4px 30px var(--shadow-light);
+            justify-content: space-between;
+            padding: 0 5%;
+            z-index: 1000;
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: var(--primary-color);
-            text-shadow: 0 2px 4px var(--shadow-light);
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+            text-decoration: none;
         }
 
-        .nav-center {
+        .nav-actions {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 24px;
         }
 
-        .search-bar {
+        .search-container {
             position: relative;
-            display: flex;
-            align-items: center;
-            width: 300px;
         }
 
-        .search-bar input {
-            width: 100%;
-            padding: 0.7rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-large);
-            font-size: 0.95rem;
-            background-color: var(--card-background);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        #search-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: white;
+            width: 250px;
+            transition: var(--transition);
         }
 
-        .search-bar input:focus {
+        #search-input:focus {
+            width: 350px;
             outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent);
         }
 
-        .cart-icon-container {
+        .cart-trigger {
             position: relative;
             cursor: pointer;
-            padding: 0.5rem;
-            transition: transform 0.2s ease;
+            padding: 8px;
         }
 
-        .cart-icon-container:hover {
-            transform: scale(1.05);
-        }
-
-        .cart-icon {
-            font-size: 1.7rem;
-            color: var(--primary-color);
-        }
-
-        .cart-counter {
+        .cart-count {
             position: absolute;
-            top: 0px;
-            right: 0px;
-            background-color: var(--accent-color);
-            color: var(--light-text-color);
-            font-size: 0.75rem;
-            font-weight: 600;
+            top: -5px;
+            right: -5px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            padding: 0.2rem 0.5rem;
-            min-width: 22px;
-            height: 22px; /* Ensure circular shape */
-            text-align: center;
-            line-height: 1;
-            transform: translate(25%, -25%);
-            display: flex; /* For perfect centering */
-            justify-content: center;
+            display: flex;
             align-items: center;
-            box-shadow: 0 2px 5px var(--shadow-light);
+            justify-content: center;
+            font-weight: bold;
         }
 
-        /* Large Hero Section */
+        /* Hero NovaCart Section */
         .hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #4a698a 100%);
-            color: var(--light-text-color);
-            text-align: center;
-            padding: 8rem 2rem;
+            height: 90vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 60vh;
+            text-align: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+            padding: 0 20px;
+            margin-bottom: 60px;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-            letter-spacing: -0.05em;
-            text-shadow: 0 3px 6px var(--shadow-medium);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(180deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero p {
-            font-size: 1.5rem;
-            margin-bottom: 2.5rem;
-            max-width: 800px;
-            opacity: 0.9;
+            color: var(--text-dim);
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin-bottom: 40px;
         }
 
-        .btn {
-            display: inline-block;
-            background-color: var(--secondary-color);
-            color: var(--light-text-color);
-            padding: 1rem 2.5rem;
-            border-radius: var(--radius-large);
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            background-color: #2980b9; /* Darker blue */
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Main Content */
-        main {
-            padding: 3rem 2rem;
-            max-width: 1200px;
+        /* Product Grid NovaCart */
+        .container {
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 0 5%;
         }
 
-        .products-section h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: var(--primary-color);
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .products-section h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background-color: var(--secondary-color);
-            border-radius: 2px;
-        }
-
-        /* Responsive CSS Grid */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 32px;
+            padding-bottom: 100px;
         }
 
         .product-card {
-            background-color: var(--card-background);
-            border-radius: var(--radius-medium);
-            box-shadow: 0 8px 25px var(--shadow-light);
-            overflow: hidden;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
+            gap: 20px;
         }
 
         .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 35px var(--shadow-medium);
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
-        /* CSS Placeholder for Product Visuals */
-        .product-image-placeholder {
-            width: 100%;
-            padding-top: 75%; /* 4:3 aspect ratio */
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.2rem;
-            color: var(--border-color);
-            font-weight: 500;
-            border-bottom: 1px solid var(--border-color);
+        .product-visual {
+            aspect-ratio: 1/1;
+            background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
+            border-radius: var(--radius-md);
             position: relative;
-            flex-shrink: 0;
-        }
-
-        .product-image-placeholder::before {
-            content: 'Gadget Visual';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .product-info {
-            padding: 1.5rem;
+            overflow: hidden;
             display: flex;
-            flex-direction: column;
-            flex-grow: 1;
+            align-items: center;
+            justify-content: center;
         }
 
-        .product-category {
+        /* CSS Placeholder Visuals */
+        .visual-blob {
+            width: 60%;
+            height: 60%;
+            filter: blur(40px);
+            opacity: 0.6;
+            border-radius: 50%;
+        }
+
+        .visual-icon {
+            position: absolute;
+            font-size: 4rem;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+        }
+
+        .product-info h3 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+
+        .product-info p {
+            color: var(--text-dim);
             font-size: 0.9rem;
-            color: #888;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            margin-bottom: 20px;
         }
 
-        .product-name {
-            font-size: 1.3rem;
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .price {
+            font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: var(--primary-color);
-            line-height: 1.3;
         }
 
-        .product-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--secondary-color);
-            margin-top: auto; /* Pushes price to the bottom */
-            margin-bottom: 1rem;
+        .add-btn {
+            background: var(--text-main);
+            color: var(--bg);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
         }
 
-        .product-card .btn {
-            width: 100%;
-            padding: 0.8rem 1.5rem;
-            font-size: 1rem;
-            border-radius: var(--radius-small);
-            margin-top: 0.5rem;
+        .add-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.05);
         }
 
-        /* Animated Cart Drawer */
-        .cart-drawer {
+        /* Cart Drawer NovaCart */
+        .cart-overlay {
             position: fixed;
             top: 0;
-            right: 0;
-            width: 400px;
+            left: 0;
+            width: 100%;
             height: 100%;
-            background-color: var(--card-background);
-            box-shadow: -8px 0 30px var(--shadow-medium);
-            transform: translateX(100%); /* Hidden by default */
-            transition: transform 0.4s cubic-bezier(0.785, 0.135, 0.15, 0.86); /* Smooth animation */
-            z-index: 1001;
-            display: flex;
-            flex-direction: column;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none;
+            opacity: 0;
+            transition: var(--transition);
         }
 
-        .cart-drawer.open {
-            transform: translateX(0); /* Revealed when open class is added */
+        .cart-drawer {
+            position: fixed;
+            right: -450px;
+            top: 0;
+            width: 450px;
+            height: 100%;
+            background: var(--surface);
+            z-index: 2001;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            border-left: 1px solid var(--border);
+        }
+
+        .cart-drawer.active {
+            right: 0;
+        }
+
+        .cart-overlay.active {
+            display: block;
+            opacity: 1;
         }
 
         .cart-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--border-color);
-            background-color: var(--background-color);
+            margin-bottom: 40px;
         }
 
-        .cart-header h3 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .close-cart-btn {
+        .close-cart {
+            cursor: pointer;
+            font-size: 1.5rem;
             background: none;
             border: none;
-            font-size: 2rem;
-            cursor: pointer;
-            color: var(--text-color);
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-
-        .close-cart-btn:hover {
-            color: var(--accent-color);
-            transform: rotate(90deg);
+            color: var(--text-main);
         }
 
         .cart-items {
             flex-grow: 1;
-            padding: 1.5rem 2rem;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
 
         .cart-item {
             display: flex;
+            gap: 16px;
             align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .cart-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
+        .cart-item-visual {
+            width: 60px;
+            height: 60px;
+            background: #222;
+            border-radius: 8px;
         }
 
-        /* CSS Placeholder for Cart Item Visuals */
-        .cart-item-image-placeholder {
-            width: 80px;
-            height: 80px;
-            background-color: #f0f0f0;
-            border-radius: var(--radius-small);
-            margin-right: 1rem;
-            flex-shrink: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.8rem;
-            color: var(--border-color);
-            font-weight: 500;
-            position: relative;
-        }
-        .cart-item-image-placeholder::before {
-            content: 'Visual';
-            position: absolute;
-        }
-
-        .cart-item-details {
+        .cart-item-info {
             flex-grow: 1;
-            display: flex;
-            flex-direction: column;
         }
 
-        .cart-item-name {
-            font-weight: 500;
-            margin-bottom: 0.3rem;
-        }
+        .cart-item-info h4 { font-size: 1rem; }
+        .cart-item-info p { color: var(--text-dim); font-size: 0.8rem; }
 
-        .cart-item-price {
-            font-size: 0.95rem;
-            color: #777;
-            margin-bottom: 0.5rem;
-        }
-
-        .cart-item-actions {
+        .qty-controls {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+            gap: 12px;
+            margin-top: 8px;
         }
 
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .quantity-controls button {
-            background-color: var(--background-color);
+        .qty-btn {
+            background: rgba(255,255,255,0.1);
             border: none;
-            padding: 0.4rem 0.8rem;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.2s ease;
         }
 
-        .quantity-controls button:hover {
-            background-color: var(--border-color);
+        .cart-footer {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
         }
 
-        .quantity-controls span {
-            padding: 0.4rem 0.8rem;
-            border-left: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-            font-size: 0.95rem;
-            min-width: 35px;
-            text-align: center;
-        }
-
-        .remove-item-btn {
-            background-color: var(--accent-color);
-            color: var(--light-text-color);
-            border: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: background-color 0.2s ease;
-        }
-
-        .remove-item-btn:hover {
-            background-color: #c0392b; /* Darker red */
-        }
-
-        .cart-summary {
-            padding: 1.5rem 2rem;
-            border-top: 1px solid var(--border-color);
-            background-color: var(--background-color);
-        }
-
-        .cart-total {
+        .total-row {
             display: flex;
             justify-content: space-between;
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 24px;
         }
 
         .checkout-btn {
             width: 100%;
-            padding: 1rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 16px;
             font-size: 1.1rem;
             font-weight: 600;
-            border-radius: var(--radius-small);
+            cursor: pointer;
+            transition: var(--transition);
         }
 
-        .empty-cart-message {
-            text-align: center;
-            padding: 2rem;
-            color: #888;
+        .checkout-btn:hover {
+            filter: brightness(1.2);
+            transform: translateY(-2px);
         }
 
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-            background-color: var(--primary-color);
-            color: var(--light-text-color);
-            font-size: 0.9rem;
-        }
-
-        /* Responsive CSS Grid adjustments */
-        @media (max-width: 1024px) {
-            .hero h1 {
-                font-size: 3rem;
-            }
-            .hero p {
-                font-size: 1.3rem;
-            }
-            .product-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            }
-        }
-
+        /* Responsive NovaCart */
         @media (max-width: 768px) {
-            header {
-                flex-wrap: wrap;
-                padding: 1rem 1.5rem;
-            }
-            .nav-center {
-                margin-top: 1rem;
-                width: 100%;
-                justify-content: space-between;
-            }
-            .search-bar {
-                width: calc(100% - 70px); /* Leave space for cart icon */
-            }
-            .cart-icon-container {
-                margin-left: auto; /* Push to right */
-            }
-            .hero {
-                padding: 6rem 1.5rem;
-                min-height: 50vh;
-            }
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            .hero p {
-                font-size: 1.1rem;
-            }
-            main {
-                padding: 2rem 1rem;
-            }
-            .products-section h2 {
-                font-size: 2rem;
-                margin-bottom: 2rem;
-            }
-            .product-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 1.5rem;
-            }
-            .cart-drawer {
-                width: 100%; /* Full width on smaller screens */
-            }
-        }
-
-        @media (max-width: 480px) {
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 1rem;
-            }
-            .nav-center {
-                flex-direction: row;
-                justify-content: space-between;
-                width: 100%;
-                margin-top: 1rem;
-            }
-            .logo {
-                font-size: 1.5rem;
-            }
-            .search-bar {
-                width: calc(100% - 60px);
-            }
-            .cart-icon-container {
-                padding: 0.2rem;
-                margin-left: auto;
-            }
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .hero p {
-                font-size: 1rem;
-            }
-            .btn {
-                padding: 0.8rem 1.8rem;
-                font-size: 1rem;
-            }
-            .products-section h2 {
-                font-size: 1.8rem;
-            }
-            .product-card {
-                padding-bottom: 1rem;
-            }
-            .product-info {
-                padding: 1rem;
-            }
-            .product-name {
-                font-size: 1.1rem;
-            }
-            .product-price {
-                font-size: 1.3rem;
-            }
-            .cart-header h3 {
-                font-size: 1.5rem;
-            }
-            .close-cart-btn {
-                font-size: 1.8rem;
-            }
-            .cart-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .cart-item-image-placeholder {
-                margin-bottom: 0.8rem;
-            }
-            .cart-item-details {
-                width: 100%;
-            }
-            .cart-item-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
+            .cart-drawer { width: 100%; right: -100%; }
+            #search-input { width: 150px; }
+            #search-input:focus { width: 180px; }
+            .hero h1 { font-size: 3rem; }
         }
     </style>
 </head>
 <body>
+
     <header>
         <a href="#" class="logo">NovaCart</a>
-        <div class="nav-center">
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Search smart gadgets...">
+        <div class="nav-actions">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search gadgets...">
             </div>
-            <div class="cart-icon-container" id="cartIcon">
-                <span class="cart-icon" role="img" aria-label="Shopping Cart">🛒</span>
-                <span class="cart-counter" id="cartCounter">0</span>
+            <div class="cart-trigger" onclick="toggleCart(true)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                <span class="cart-count">0</span>
             </div>
         </div>
     </header>
 
-    <div class="cart-drawer" id="cartDrawer">
+    <section class="hero">
+        <h1>Experience Future.</h1>
+        <p>Discover the next generation of smart accessories meticulously designed for your digital NovaCart life.</p>
+    </section>
+
+    <main class="container">
+        <div class="product-grid" id="product-grid">
+            <!-- Products injected by JS -->
+        </div>
+    </main>
+
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart(false)"></div>
+    <div class="cart-drawer" id="cart-drawer">
         <div class="cart-header">
-            <h3>Your NovaCart</h3>
-            <button class="close-cart-btn" id="closeCartBtn" aria-label="Close Cart">&times;</button>
+            <h2>Your Bag</h2>
+            <button class="close-cart" onclick="toggleCart(false)">&times;</button>
         </div>
-        <div class="cart-items" id="cartItems">
-            <!-- Cart items will be rendered here -->
-            <p class="empty-cart-message">Your NovaCart is empty.</p>
+        <div class="cart-items" id="cart-items">
+            <!-- Cart items injected by JS -->
         </div>
-        <div class="cart-summary">
-            <div class="cart-total">
-                <span>Total:</span>
-                <span id="cartTotal">$0.00</span>
+        <div class="cart-footer">
+            <div class="total-row">
+                <span>Total</span>
+                <span id="cart-total">$0.00</span>
             </div>
-            <button class="btn checkout-btn">Proceed to Checkout</button>
+            <button class="checkout-btn">Checkout Now</button>
         </div>
     </div>
 
-    <main>
-        <section class="hero">
-            <h1>Experience Tomorrow's Tech, Today.</h1>
-            <p>Discover a curated collection of premium smart gadgets designed to elevate your everyday life.</p>
-            <a href="#products" class="btn">Explore Gadgets</a>
-        </section>
-
-        <section id="products" class="products-section">
-            <h2>Our Latest Innovations</h2>
-            <div class="product-grid" id="productGrid">
-                <!-- Products will be dynamically loaded here -->
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 NovaCart. All rights reserved. Built for the modern tech enthusiast.</p>
-    </footer>
-
     <script>
-        // Dummy Product Data
+        // Data
         const products = [
-            { id: 1, name: 'Nova Smartwatch Pro', category: 'Wearables', price: 299.99, description: 'Advanced health tracking and communication on your wrist.' },
-            { id: 2, name: 'Aura Smart Speaker', category: 'Audio', price: 149.99, description: 'Immersive sound with intelligent voice assistant.' },
-            { id: 3, name: 'Connect Pro Hub', category: 'Smart Home', price: 89.99, description: 'Centralize control for all your smart home devices.' },
-            { id: 4, name: 'Echo Earbuds X', category: 'Audio', price: 199.99, description: 'Crystal-clear audio with adaptive noise cancellation.' },
-            { id: 5, name: 'Zen Sleep Monitor', category: 'Health', price: 129.99, description: 'Track and improve your sleep quality with advanced insights.' },
-            { id: 6, name: 'Terra Drone Mini', category: 'Drones', price: 349.99, description: 'Compact and agile drone for stunning aerial photography.' },
-            { id: 7, name: 'FlexiCharge Wireless Pad', category: 'Accessories', price: 49.99, description: 'Fast, universal wireless charging for all compatible devices.' },
-            { id: 8, name: 'Sentinel Smart Camera', category: 'Security', price: 179.99, description: 'HD security camera with AI motion detection.' },
-            { id: 9, name: 'Quantum VR Headset', category: 'Gaming', price: 499.99, description: 'Next-gen virtual reality for unparalleled immersion.' },
-            { id: 10, name: 'Flow Air Purifier', category: 'Smart Home', price: 229.99, description: 'Intelligent air purification for a healthier living space.' }
+            { id: 1, name: "NovaWatch Ultra", price: 799, category: "Wearables", color: "#007AFF", icon: "⌚" },
+            { id: 2, name: "SonicPods Pro", price: 249, category: "Audio", color: "#FF2D55", icon: "🎧" },
+            { id: 3, name: "CoreHub Max", price: 159, category: "Accessories", color: "#AF52DE", icon: "🔌" },
+            { id: 4, name: "GlowCharge Pad", price: 89, category: "Power", color: "#34C759", icon: "⚡" },
+            { id: 5, name: "LumenKey Pro", price: 199, category: "Input", color: "#5856D6", icon: "⌨️" },
+            { id: 6, name: "VisionFrame X", price: 1299, category: "Wearables", color: "#FF9500", icon: "🕶️" }
         ];
 
-        // DOM Elements
-        const productGrid = document.getElementById('productGrid');
-        const cartIcon = document.getElementById('cartIcon');
-        const cartCounter = document.getElementById('cartCounter');
-        const cartDrawer = document.getElementById('cartDrawer');
-        const closeCartBtn = document.getElementById('closeCartBtn');
-        const cartItemsContainer = document.getElementById('cartItems');
-        const cartTotalDisplay = document.getElementById('cartTotal');
-        const searchInput = document.getElementById('searchInput');
+        let cart = JSON.parse(localStorage.getItem('novaCartData')) || [];
 
-        // Cart State (loaded from localStorage)
-        let cart = JSON.parse(localStorage.getItem('novaCart')) || [];
+        // Elements
+        const productGrid = document.getElementById('product-grid');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartCount = document.querySelector('.cart-count');
+        const cartTotal = document.getElementById('cart-total');
+        const searchInput = document.getElementById('search-input');
+        const cartDrawer = document.getElementById('cart-drawer');
+        const cartOverlay = document.getElementById('cart-overlay');
 
-        // --- Utility Functions ---
-        function formatPrice(price) {
-            return `$${price.toFixed(2)}`;
+        // Initialize NovaCart
+        function init() {
+            renderProducts(products);
+            updateCartUI();
         }
 
-        // --- Render Products ---
-        function renderProducts(filteredProducts = products) {
-            productGrid.innerHTML = ''; // Clear existing products
-            if (filteredProducts.length === 0) {
-                productGrid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; font-size: 1.2rem; color: #888;">No NovaCart products found matching your search.</p>';
-                return;
-            }
-            filteredProducts.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.classList.add('product-card');
-                productCard.innerHTML = `
-                    <div class="product-image-placeholder"></div>
-                    <div class="product-info">
-                        <span class="product-category">${product.category}</span>
-                        <h3 class="product-name">${product.name}</h3>
-                        <p class="product-price">${formatPrice(product.price)}</p>
-                        <button class="btn add-to-bag-btn" data-id="${product.id}">Add to Bag</button>
+        // Render Product Grid
+        function renderProducts(items) {
+            productGrid.innerHTML = items.map(product => `
+                <div class="product-card">
+                    <div class="product-visual">
+                        <div class="visual-blob" style="background: ${product.color}"></div>
+                        <div class="visual-icon">${product.icon}</div>
                     </div>
-                `;
-                productGrid.appendChild(productCard);
-            });
-            attachAddToCartListeners(); // Attach event listeners after rendering
+                    <div class="product-info">
+                        <p>${product.category}</p>
+                        <h3>${product.name}</h3>
+                    </div>
+                    <div class="product-footer">
+                        <span class="price">$${product.price}</span>
+                        <button class="add-btn" onclick="addToCart(${product.id})">Add to Bag</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // --- Live Cart Counter ---
-        function updateCartCounter() {
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCounter.textContent = totalItems;
-            cartCounter.style.display = totalItems > 0 ? 'flex' : 'none'; // Show/hide counter
-        }
+        // Cart Logic
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const existing = cart.find(item => item.id === id);
 
-        // --- localStorage Management ---
-        function saveCartToLocalStorage() {
-            localStorage.setItem('novaCart', JSON.stringify(cart));
-        }
-
-        // --- Cart Total Calculation ---
-        function calculateCartTotal() {
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            cartTotalDisplay.textContent = formatPrice(total);
-        }
-
-        // --- Render Cart Items in Drawer ---
-        function renderCartItems() {
-            cartItemsContainer.innerHTML = ''; // Clear existing cart items
-            if (cart.length === 0) {
-                cartItemsContainer.innerHTML = '<p class="empty-cart-message">Your NovaCart is empty.</p>';
-                calculateCartTotal();
-                updateCartCounter();
-                return;
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
             }
+            
+            saveAndUpdate();
+            toggleCart(true);
+        }
 
-            cart.forEach(item => {
-                const cartItemDiv = document.createElement('div');
-                cartItemDiv.classList.add('cart-item');
-                cartItemDiv.innerHTML = `
-                    <div class="cart-item-image-placeholder"></div>
-                    <div class="cart-item-details">
-                        <span class="cart-item-name">${item.name}</span>
-                        <span class="cart-item-price">${formatPrice(item.price)}</span>
-                        <div class="cart-item-actions">
-                            <div class="quantity-controls">
-                                <button class="quantity-btn decrement-qty" data-id="${item.id}" aria-label="Decrease quantity of ${item.name}">-</button>
+        function updateQuantity(id, delta) {
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                }
+            }
+            saveAndUpdate();
+        }
+
+        function saveAndUpdate() {
+            localStorage.setItem('novaCartData', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            // Update counter
+            const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+            cartCount.textContent = totalItems;
+
+            // Update items
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align:center; color:var(--text-dim); margin-top:20px;">Your bag is empty.</p>';
+            } else {
+                cartItemsContainer.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-visual" style="background: linear-gradient(45deg, ${item.color}44, ${item.color}22)"></div>
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <p>$${item.price}</p>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
                                 <span>${item.quantity}</span>
-                                <button class="quantity-btn increment-qty" data-id="${item.id}" aria-label="Increase quantity of ${item.name}">+</button>
+                                <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
                             </div>
-                            <button class="remove-item-btn" data-id="${item.id}" aria-label="Remove ${item.name} from cart">Remove</button>
                         </div>
                     </div>
-                `;
-                cartItemsContainer.appendChild(cartItemDiv);
-            });
+                `).join('');
+            }
 
-            calculateCartTotal();
-            updateCartCounter();
-            attachCartItemListeners(); // Attach event listeners for cart items
+            // Update Total
+            const total = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            cartTotal.textContent = `$${total.toFixed(2)}`;
         }
 
-        // --- Add to Bag Functionality ---
-        function addToCart(productId) {
-            const product = products.find(p => p.id === parseInt(productId));
-            if (!product) return; // Product not found
-
-            const existingItem = cart.find(item => item.id === product.id);
-
-            if (existingItem) {
-                existingItem.quantity++;
+        // UI Controls
+        function toggleCart(show) {
+            if (show) {
+                cartOverlay.classList.add('active');
+                cartDrawer.classList.add('active');
             } else {
-                cart.push({ ...product, quantity: 1 }); // Add new item with quantity 1
-            }
-            saveCartToLocalStorage();
-            updateCartCounter();
-            // Optional: Show a brief confirmation message or open cart drawer
-        }
-
-        // --- Quantity Increment & Removal ---
-        function updateQuantity(productId, change) {
-            const itemIndex = cart.findIndex(item => item.id === parseInt(productId));
-            if (itemIndex > -1) {
-                cart[itemIndex].quantity += change;
-                if (cart[itemIndex].quantity <= 0) {
-                    cart.splice(itemIndex, 1); // Remove item if quantity becomes zero or less
-                }
-                saveCartToLocalStorage();
-                renderCartItems(); // Re-render cart to reflect changes
+                cartOverlay.classList.remove('active');
+                cartDrawer.classList.remove('active');
             }
         }
 
-        function removeItemFromCart(productId) {
-            cart = cart.filter(item => item.id !== parseInt(productId));
-            saveCartToLocalStorage();
-            renderCartItems(); // Re-render cart to reflect changes
-        }
-
-        // --- Event Listeners ---
-        function attachAddToCartListeners() {
-            document.querySelectorAll('.add-to-bag-btn').forEach(button => {
-                button.onclick = (e) => {
-                    addToCart(e.target.dataset.id);
-                };
-            });
-        }
-
-        function attachCartItemListeners() {
-            document.querySelectorAll('.decrement-qty').forEach(button => {
-                button.onclick = (e) => {
-                    updateQuantity(e.target.dataset.id, -1);
-                };
-            });
-
-            document.querySelectorAll('.increment-qty').forEach(button => {
-                button.onclick = (e) => {
-                    updateQuantity(e.target.dataset.id, 1);
-                };
-            });
-
-            document.querySelectorAll('.remove-item-btn').forEach(button => {
-                button.onclick = (e) => {
-                    removeItemFromCart(e.target.dataset.id);
-                };
-            });
-        }
-
-        // Open/Close Cart Drawer
-        cartIcon.addEventListener('click', () => {
-            cartDrawer.classList.add('open');
-            renderCartItems(); // Always re-render cart when opening to show latest state
-        });
-
-        closeCartBtn.addEventListener('click', () => {
-            cartDrawer.classList.remove('open');
-        });
-
-        // --- Live Search Filtering ---
-        searchInput.addEventListener('keyup', (e) => {
-            const searchTerm = e.target.value.toLowerCase().trim();
-            const filteredProducts = products.filter(product =>
-                product.name.toLowerCase().includes(searchTerm) ||
-                product.category.toLowerCase().includes(searchTerm) ||
-                product.description.toLowerCase().includes(searchTerm)
+        // Live Search NovaCart Functionality
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = products.filter(p => 
+                p.name.toLowerCase().includes(term) || 
+                p.category.toLowerCase().includes(term)
             );
-            renderProducts(filteredProducts); // No NovaCart reload, just re-render grid
+            renderProducts(filtered);
         });
 
-        // --- Initial NovaCart Load ---
-        document.addEventListener('DOMContentLoaded', () => {
-            renderProducts(); // Render all products initially
-            updateCartCounter(); // Initialize cart counter
-        });
+        // Load NovaCart
+        window.onload = init;
     </script>
 </body>
 </html>
