@@ -20,19 +20,18 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install Gemini SDK
         run: pip install --upgrade google-genai
 
-      - name: Run Gemini AI to Update Website UI
+      - name: Generate Website with Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python << 'EOF'
           import os
           import subprocess
-          import re
           from pathlib import Path
           from google import genai
 
@@ -68,50 +67,39 @@ jobs:
           - Modern typography
           - Premium minimalist design
 
-          OUTPUT FORMAT STRICTLY
-
-          ---index.html---
-          <!DOCTYPE html>
-          <html>
-          ...full working premium UI document...
-          </html>
+          OUTPUT
+          Return ONLY a full working index.html file.
           """
 
           client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
           response = client.models.generate_content(
-              model="gemini-3-flash-preview",
+              model="gemini-2.5-flash",
               contents=prompt
           )
 
-          output = response.text
+          html = response.text
 
-          if not output:
-              print("Gemini returned empty response.")
+          if not html:
+              print("Gemini returned empty output")
               exit(1)
 
-          matches = re.findall(
-              r"---(.*?)---\n(.*?)(?=(?:---|$))",
-              output,
-              re.DOTALL
-          )
+          # Always write to index.html
+          Path("index.html").write_text(html.strip(), encoding="utf-8")
 
-          for filename, content in matches:
-              path = Path(filename.strip())
-              path.write_text(content.strip(), encoding="utf-8")
-
+          # Git setup
           subprocess.run(["git","config","--global","user.name","gemini-bot"])
           subprocess.run(["git","config","--global","user.email","bot@example.com"])
-          subprocess.run(["git","add","."])
+
+          subprocess.run(["git","add","index.html"])
 
           result = subprocess.run(["git","diff","--cached","--quiet"])
 
           if result.returncode != 0:
-              subprocess.run(["git","commit","-m","Gemini AI upgraded UI"])
+              subprocess.run(["git","commit","-m","Gemini AI generated NovaCart UI"])
               subprocess.run(["git","push"])
           else:
-              print("No changes detected.")
-
+              print("No changes detected")
           EOF
 
       - name: Configure AWS Credentials
@@ -126,6 +114,4 @@ jobs:
           aws s3 sync . s3://staticwebzsitegit \
             --exclude "*" \
             --include "index.html" \
-            --include "*.css" \
-            --include "*.js" \
             --delete
