@@ -64,6 +64,7 @@ jobs:
           - functionality that is common for all e-commerce websites
 
           DESIGN
+          - Light mode and Dark mode
           - Large hero section
           - Glassmorphism sticky header
           - Responsive CSS grid
