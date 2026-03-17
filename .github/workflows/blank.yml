@@ -1,0 +1,131 @@
+name: Gemini AI Auto Commit and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ai-commit-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Gemini SDK
+        run: pip install --upgrade google-genai
+
+      - name: Run Gemini AI to Update Website UI
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python << 'EOF'
+          import os
+          import subprocess
+          import re
+          from pathlib import Path
+          from google import genai
+
+          prompt = """
+          ROLE
+          You are a senior frontend engineer building a premium 2026 modern e-commerce storefront.
+
+          BRAND NAME
+          NovaCart
+
+          WEBSITE IDEA
+          A premium Smart Gadgets Store selling modern tech accessories.
+
+          IMPORTANT RULES
+          - Replace every instance of "page" with "NovaCart"
+          - Do NOT use any images
+          - Use elegant CSS placeholders for product visuals
+
+          FUNCTIONALITY
+          - Add to Bag (localStorage)
+          - Live cart counter
+          - Animated cart drawer
+          - Quantity increment & removal
+          - Live search filtering
+          - No page reload
+          - Vanilla JavaScript only
+          - All JS inside <script>
+
+          DESIGN REQUIREMENTS
+          - Large hero section
+          - Glassmorphism sticky header
+          - Responsive CSS grid
+          - Modern typography
+          - Premium minimalist design
+
+          OUTPUT FORMAT STRICTLY
+
+          ---index.html---
+          <!DOCTYPE html>
+          <html>
+          ...full working premium UI document...
+          </html>
+          """
+
+          client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+
+          response = client.models.generate_content(
+              model="gemini-3-flash-preview",
+              contents=prompt
+          )
+
+          output = response.text
+
+          if not output:
+              print("Gemini returned empty response.")
+              exit(1)
+
+          matches = re.findall(
+              r"---(.*?)---\n(.*?)(?=(?:---|$))",
+              output,
+              re.DOTALL
+          )
+
+          for filename, content in matches:
+              path = Path(filename.strip())
+              path.write_text(content.strip(), encoding="utf-8")
+
+          subprocess.run(["git","config","--global","user.name","gemini-bot"])
+          subprocess.run(["git","config","--global","user.email","bot@example.com"])
+          subprocess.run(["git","add","."])
+
+          result = subprocess.run(["git","diff","--cached","--quiet"])
+
+          if result.returncode != 0:
+              subprocess.run(["git","commit","-m","Gemini AI upgraded UI"])
+              subprocess.run(["git","push"])
+          else:
+              print("No changes detected.")
+
+          EOF
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync . s3://staticwebzsitegit \
+            --exclude "*" \
+            --include "index.html" \
+            --include "*.css" \
+            --include "*.js" \
+            --delete
