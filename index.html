@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NovaCart | The Future of Tech-Luxe</title>
+    <title>NovaCart | Premium Tech & Lifestyle</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #ffffff;
-            --text: #0a0a0a;
+            --text: #1d1d1f;
             --accent: #0071e3;
             --card-bg: #f5f5f7;
-            --glass: rgba(255, 255, 255, 0.7);
-            --border: rgba(0,0,0,0.1);
-            --shadow: 0 10px 30px rgba(0,0,0,0.05);
-            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --border: #d2d2d7;
+            --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         [data-theme="dark"] {
@@ -24,9 +23,8 @@
             --text: #f5f5f7;
             --accent: #2997ff;
             --card-bg: #1c1c1e;
-            --glass: rgba(10, 10, 10, 0.7);
-            --border: rgba(255,255,255,0.1);
-            --shadow: 0 10px 30px rgba(0,0,0,0.5);
+            --nav-bg: rgba(10, 10, 10, 0.8);
+            --border: #333333;
         }
 
         * {
@@ -34,53 +32,43 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
             background-color: var(--bg);
             color: var(--text);
+            transition: var(--transition);
             overflow-x: hidden;
-            transition: background-color 0.5s ease;
         }
 
-        /* Typography */
-        h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; }
-        p { line-height: 1.6; opacity: 0.8; }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
-
-        /* Header */
+        /* --- Header --- */
         header {
             position: fixed;
             top: 0;
             width: 100%;
-            z-index: 1000;
-            background: var(--glass);
+            height: 64px;
+            background: var(--nav-bg);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
             border-bottom: 1px solid var(--border);
-            padding: 1rem 5%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
         }
 
         .logo {
+            font-weight: 700;
             font-size: 1.5rem;
-            font-weight: 800;
+            letter-spacing: -1px;
             cursor: pointer;
-            background: linear-gradient(90deg, var(--text), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
-        nav {
+        .nav-actions {
             display: flex;
-            gap: 2rem;
             align-items: center;
+            gap: 2rem;
         }
 
         .search-container {
@@ -88,31 +76,31 @@
         }
 
         #search-input {
-            padding: 0.6rem 1.2rem;
-            border-radius: 20px;
-            border: 1px solid var(--border);
             background: var(--card-bg);
+            border: 1px solid var(--border);
             color: var(--text);
-            width: 250px;
+            padding: 8px 16px;
+            border-radius: 20px;
             outline: none;
+            width: 200px;
+            transition: var(--transition);
         }
 
-        .nav-icons {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
+        #search-input:focus {
+            width: 300px;
+            border-color: var(--accent);
         }
 
-        .icon-btn {
+        .cart-trigger, .theme-toggle {
+            cursor: pointer;
+            position: relative;
             background: none;
             border: none;
             color: var(--text);
-            cursor: pointer;
-            font-size: 1.2rem;
-            position: relative;
+            font-size: 1.1rem;
         }
 
-        #cart-count {
+        .cart-count {
             position: absolute;
             top: -8px;
             right: -10px;
@@ -120,53 +108,65 @@
             color: white;
             font-size: 0.7rem;
             padding: 2px 6px;
-            border-radius: 50%;
+            border-radius: 10px;
+            font-weight: bold;
         }
 
-        /* Hero Section */
+        /* --- Hero Section --- */
         .hero {
             height: 100vh;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
+            align-items: center;
             text-align: center;
-            padding: 0 10%;
-            background: radial-gradient(circle at center, var(--accent) 0%, transparent 70%);
+            padding: 0 5%;
+            background: linear-gradient(180deg, var(--bg) 0%, var(--card-bg) 100%);
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -3px;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: #86868b;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary {
+            background: var(--text);
+            color: var(--bg);
+            padding: 16px 32px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
             opacity: 0.9;
         }
 
-        .hero-content h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
-            margin-bottom: 1rem;
-            transform: translateY(30px);
-            opacity: 0;
-            animation: fadeInUp 1s forwards 0.2s;
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            transform: translateY(30px);
-            opacity: 0;
-            animation: fadeInUp 1s forwards 0.4s;
-        }
-
-        @keyframes fadeInUp {
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        /* Products Grid */
+        /* --- Featured Grid --- */
         .section-title {
-            padding: 5rem 5% 2rem;
+            padding: 80px 5% 40px;
             font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
         }
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 2rem;
-            padding: 0 5% 5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 0 5% 100px;
         }
 
         .product-card {
@@ -174,97 +174,139 @@
             border-radius: 24px;
             overflow: hidden;
             transition: var(--transition);
-            border: 1px solid var(--border);
             position: relative;
+            border: 1px solid transparent;
         }
 
         .product-card:hover {
             transform: translateY(-10px);
-            box-shadow: var(--shadow);
+            border-color: var(--border);
         }
 
-        .product-img {
+        .product-image {
             width: 100%;
-            height: 400px;
+            height: 350px;
             object-fit: cover;
             transition: var(--transition);
         }
 
-        .product-card:hover .product-img {
+        .product-card:hover .product-image {
             transform: scale(1.05);
         }
 
         .product-info {
-            padding: 1.5rem;
+            padding: 24px;
         }
 
         .product-category {
-            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            font-size: 0.75rem;
+            font-weight: 600;
             color: var(--accent);
-            margin-bottom: 0.5rem;
+            margin-bottom: 8px;
         }
 
         .product-name {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
 
         .product-desc {
             font-size: 0.9rem;
-            opacity: 0.6;
-            margin-bottom: 1rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            color: #86868b;
+            margin-bottom: 16px;
+            height: 40px;
             overflow: hidden;
         }
 
-        .product-footer {
+        .product-price {
+            font-size: 1.1rem;
+            font-weight: 600;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .price {
-            font-weight: 600;
-            font-size: 1.2rem;
-        }
-
-        .add-to-cart {
-            background: var(--text);
-            color: var(--bg);
+        .add-to-bag {
+            background: var(--accent);
+            color: white;
             border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 30px;
+            padding: 8px 20px;
+            border-radius: 20px;
             cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
-        .add-to-cart:hover {
-            opacity: 0.8;
-            transform: scale(0.95);
+        /* --- Scroll Animation Section --- */
+        .feature-showcase {
+            padding: 100px 5%;
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            min-height: 80vh;
         }
 
-        /* Cart Drawer */
-        #cart-drawer {
+        .feature-showcase:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .feature-content {
+            flex: 1;
+        }
+
+        .feature-content h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-image-container {
+            flex: 1;
+            border-radius: 30px;
+            overflow: hidden;
+        }
+
+        .feature-image-container img {
+            width: 100%;
+            display: block;
+        }
+
+        /* --- Cart Drawer --- */
+        .cart-overlay {
             position: fixed;
-            right: -400px;
             top: 0;
-            width: 400px;
-            height: 100vh;
-            background: var(--bg);
-            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
             z-index: 2000;
+            visibility: hidden;
+            opacity: 0;
             transition: var(--transition);
-            padding: 2rem;
+        }
+
+        .cart-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background: var(--bg);
+            z-index: 2001;
+            padding: 40px 30px;
+            transition: var(--transition);
             display: flex;
             flex-direction: column;
         }
 
-        #cart-drawer.open {
+        .cart-drawer.active {
             right: 0;
         }
 
@@ -272,386 +314,361 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 30px;
         }
 
         .cart-items {
-            flex-grow: 1;
+            flex: 1;
             overflow-y: auto;
         }
 
         .cart-item {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            align-items: center;
-            padding-bottom: 1rem;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
             border-bottom: 1px solid var(--border);
         }
 
         .cart-item img {
             width: 80px;
             height: 80px;
-            object-fit: cover;
             border-radius: 12px;
+            object-fit: cover;
         }
 
-        .cart-item-info h4 { font-size: 1rem; }
+        .cart-item-details {
+            flex: 1;
+        }
 
-        .qty-controls {
+        .cart-item-qty {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+            gap: 10px;
+            margin-top: 10px;
         }
 
         .qty-btn {
             background: var(--card-bg);
-            border: 1px solid var(--border);
+            border: none;
             color: var(--text);
-            width: 25px;
-            height: 25px;
-            border-radius: 5px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
             cursor: pointer;
         }
 
         .cart-footer {
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 2px solid var(--border);
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
         }
 
         .checkout-btn {
             width: 100%;
-            padding: 1rem;
+            padding: 16px;
             background: var(--accent);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            border-radius: 30px;
+            font-size: 1rem;
             font-weight: 600;
-            margin-top: 1rem;
             cursor: pointer;
         }
 
-        /* AI Chatbot */
-        #ai-trigger {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: var(--accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            z-index: 1000;
-            font-size: 1.5rem;
-            color: white;
-        }
-
-        #ai-window {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            width: 350px;
-            height: 500px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            display: none;
-            flex-direction: column;
-            box-shadow: var(--shadow);
-            z-index: 1000;
-            overflow: hidden;
-        }
-
-        .ai-header {
-            padding: 1rem;
-            background: var(--accent);
-            color: white;
-            font-weight: 600;
-        }
-
-        .ai-messages {
-            flex-grow: 1;
-            padding: 1rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .msg {
-            padding: 0.8rem;
-            border-radius: 12px;
-            max-width: 80%;
-            font-size: 0.9rem;
-        }
-
-        .msg.bot { background: var(--card-bg); align-self: flex-start; }
-        .msg.user { background: var(--accent); color: white; align-self: flex-end; }
-
-        .ai-input-area {
-            padding: 1rem;
-            display: flex;
-            gap: 0.5rem;
+        footer {
+            padding: 80px 5%;
+            background: var(--card-bg);
+            text-align: center;
             border-top: 1px solid var(--border);
         }
 
-        #ai-input {
-            flex-grow: 1;
-            border: 1px solid var(--border);
-            background: var(--card-bg);
-            color: var(--text);
-            padding: 0.5rem;
-            border-radius: 8px;
-            outline: none;
+        /* --- Scroll Animation Utility --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
         }
 
-        /* Responsive */
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         @media (max-width: 768px) {
-            #cart-drawer { width: 100%; right: -100%; }
-            nav { display: none; }
-            #search-input { width: 150px; }
+            .cart-drawer {
+                width: 100%;
+                right: -100%;
+            }
+            .hero h1 { font-size: 3.5rem; }
+            .feature-showcase { flex-direction: column !important; }
+            #search-input { width: 120px; }
+            #search-input:focus { width: 180px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">NovaCart.</div>
-        <nav>
+        <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">NovaCart</div>
+        <div class="nav-actions">
             <div class="search-container">
-                <input type="text" id="search-input" placeholder="Search devices...">
+                <input type="text" id="search-input" placeholder="Search gadgets...">
             </div>
-            <div class="nav-icons">
-                <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">🌓</button>
-                <button class="icon-btn" onclick="toggleCart()" title="View Cart">
-                    👜 <span id="cart-count">0</span>
-                </button>
-            </div>
-        </nav>
+            <button class="theme-toggle" id="theme-btn">🌓</button>
+            <button class="cart-trigger" id="cart-btn">
+                <span>🛒</span>
+                <span class="cart-count" id="cart-count">0</span>
+            </button>
+        </div>
     </header>
 
-    <section class="hero">
-        <div class="hero-content">
-            <p>Experience the 2026 Collection</p>
-            <h1>NovaCart Future-Tech</h1>
-            <p>Intelligence integrated into every stitch, fiber, and pixel. Discover the next generation of wearable harmony.</p>
-            <button class="add-to-cart" onclick="document.getElementById('explore').scrollIntoView()">Explore Collection</button>
+    <main>
+        <section class="hero">
+            <h1 class="reveal">Next-Gen Tech.<br>Now on NovaCart.</h1>
+            <p class="reveal">Experience the future of personal technology with NovaCart's curated 2026 collection.</p>
+            <a href="#shop" class="btn-primary reveal">Explore Collection</a>
+        </section>
+
+        <section class="feature-showcase reveal">
+            <div class="feature-content">
+                <p class="product-category">Featured Wearable</p>
+                <h2>The Chrono X1</h2>
+                <p>Titanium precision meets neural-link connectivity. This NovaCart exclusive redefine how you interact with time.</p>
+            </div>
+            <div class="feature-image-container">
+                <img src="images/watch-1.jpg" alt="Chrono X1">
+            </div>
+        </section>
+
+        <h2 class="section-title reveal" id="shop">The NovaCart Store</h2>
+        
+        <div class="product-grid" id="product-grid">
+            <!-- Products injected by JS -->
         </div>
-    </section>
 
-    <h2 class="section-title" id="explore">Curated Intelligence</h2>
-    <div class="product-grid" id="product-list">
-        <!-- Products injected by JS -->
-    </div>
+        <section class="feature-showcase reveal">
+            <div class="feature-image-container">
+                <img src="images/shoe-1.jpg" alt="Velocity Pro">
+            </div>
+            <div class="feature-content">
+                <p class="product-category">Performance</p>
+                <h2>Velocity Pro</h2>
+                <p>Engineered for speed, designed for comfort. The NovaCart Velocity Pro features adaptive cushioning for every stride.</p>
+            </div>
+        </section>
+    </main>
 
-    <!-- Cart Drawer -->
-    <div id="cart-drawer">
+    <footer>
+        <p>&copy; 2026 NovaCart. All rights reserved.</p>
+        <p style="margin-top: 10px; color: #86868b; font-size: 0.8rem;">Every NovaCart purchase includes premium support.</p>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-drawer" id="cart-drawer">
         <div class="cart-header">
             <h2>Your Bag</h2>
-            <button class="icon-btn" onclick="toggleCart()" style="font-size: 1.5rem">×</button>
+            <button class="cart-trigger" id="close-cart" style="font-size: 1.5rem;">&times;</button>
         </div>
         <div class="cart-items" id="cart-items-container">
-            <!-- Cart items injected by JS -->
+            <!-- Cart Items injected by JS -->
         </div>
         <div class="cart-footer">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem">
+            <div class="total-row">
                 <span>Total</span>
                 <span id="cart-total">$0.00</span>
             </div>
-            <p style="font-size: 0.8rem; margin-bottom: 1rem;">Shipping and taxes calculated at checkout.</p>
-            <button class="checkout-btn">Proceed to Checkout</button>
-        </div>
-    </div>
-
-    <!-- AI Chatbot UI -->
-    <div id="ai-trigger" onclick="toggleAI()">✦</div>
-    <div id="ai-window">
-        <div class="ai-header">NovaCart Intelligence</div>
-        <div class="ai-messages" id="ai-messages">
-            <div class="msg bot">Hello! I am the NovaCart AI assistant. How can I help you elevate your tech lifestyle today?</div>
-        </div>
-        <div class="ai-input-area">
-            <input type="text" id="ai-input" placeholder="Ask NovaCart AI...">
-            <button class="icon-btn" onclick="sendMessage()">➤</button>
+            <button class="checkout-btn">Checkout from NovaCart</button>
         </div>
     </div>
 
     <script>
-        // Product Data
+        // --- Product Data ---
         const products = [
-            { id: 1, name: "Nova Belt G1", category: "Smart Gear", price: 149, img: "belt.jpg", desc: "Haptic feedback belt with integrated posture monitoring and subtle notification pulses." },
-            { id: 2, name: "Titanium Chrono", category: "Wearables", price: 599, img: "watch-1.jpg", desc: "Pure titanium casing with 4-week battery life and bio-metric oxygen tracking." },
-            { id: 3, name: "Aero Runner 4", category: "Footwear", price: 220, img: "shoe-1.jpg", desc: "Self-lacing smart shoes with real-time pressure mapping for athletes." },
-            { id: 4, name: "Onyx Jacket", category: "Apparel", price: 350, img: "jacket-1.jpg", desc: "Graphene-infused thermal regulation jacket with integrated heating elements." },
-            { id: 5, name: "Prism Lens S3", category: "Accessories", price: 89, img: "1.jpg", desc: "Smart lifestyle glasses with blue light filtration and subtle heads-up display." },
-            { id: 6, name: "Neo-Classic Shirt", category: "Apparel", price: 120, img: "shirt-1.jpg", desc: "Moisture-wicking smart fabric that adapts its breathability to your skin temperature." },
-            { id: 7, name: "Cyber Sport Kit", category: "Fitness", price: 180, img: "sports-1.jpg", desc: "Performance tracking gear that syncs directly with your NovaCart ecosystem." },
-            { id: 8, name: "Quantum Jewel", category: "Jewellery", price: 450, img: "jewellery-1.jpg", desc: "Subtle NFC-enabled smart ring for contactless payments and secure data storage." },
-            { id: 9, name: "Vertex Watch", category: "Wearables", price: 320, img: "watch-2.jpg", desc: "The perfect balance of minimalist design and high-performance sensor tech." },
-            { id: 10, name: "Stealth Boots", category: "Footwear", price: 290, img: "shoe-2.jpg", desc: "All-terrain smart boots with impact absorption and GPS tracking capabilities." },
-            { id: 11, name: "Hydra Essence", category: "Tech-Care", price: 65, img: "shampoo.jpg", desc: "Molecular hair care designed to protect against urban pollutants and UV." },
-            { id: 12, name: "Nexus Parka", category: "Apparel", price: 490, img: "jacket-4.jpg", desc: "Deep-winter protection with built-in voice assistant microphone and speakers." },
-            { id: 13, name: "Evo Sneakers", category: "Footwear", price: 195, img: "shoe-5.jpg", desc: "Lightweight urban sneakers with customizable LED accents via the NovaCart app." },
-            { id: 14, name: "Midnight Essence", category: "Tech-Care", price: 110, img: "perfume.jpg", desc: "A scent profile designed by AI to react with your personal pheromones." },
-            { id: 15, name: "Aura Pendant", category: "Jewellery", price: 275, img: "jewellery-3.jpg", desc: "Stress-monitoring pendant that glows subtly when it detects high cortisol levels." },
-            { id: 16, name: "Vanguard Tech-Pants", category: "Apparel", price: 160, img: "shorts-1.jpg", desc: "Water-resistant, stretchable trousers with dedicated pockets for all your devices." }
+            { id: 1, name: "NovaCart Chrono X1", category: "Wearables", price: 599.00, img: "watch-1.jpg", desc: "Precision titanium smartwatch with 10-day battery life." },
+            { id: 2, name: "Velocity Sneakers", category: "Footwear", price: 180.00, img: "shoe-1.jpg", desc: "Adaptive cushioning for maximum energy return." },
+            { id: 3, name: "Element Shield", category: "Apparel", price: 245.00, img: "jacket-1.jpg", desc: "Weather-resistant minimalist tech-shell." },
+            { id: 4, name: "Aura Ring", category: "Jewellery", price: 299.00, img: "jewellery-1.jpg", desc: "Smart health tracking in a seamless gold band." },
+            { id: 5, name: "NovaCart Essence", category: "Lifestyle", price: 120.00, img: "perfume.jpg", desc: "Signature scent with notes of cedar and ozone." },
+            { id: 6, name: "Titan Chronograph", category: "Wearables", price: 450.00, img: "watch-2.jpg", desc: "Classic aesthetics with modern biometric sensors." },
+            { id: 7, name: "Aero Shorts", category: "Sports", price: 65.00, img: "shorts-1.jpg", desc: "Ultralight breathable fabric for high-intensity training." },
+            { id: 8, name: "NovaCart Pro Buds", category: "Audio", price: 199.00, img: "1.jpg", desc: "Lossless audio with active spatial transparency." },
+            { id: 9, name: "Urban Explorer", category: "Footwear", price: 210.00, img: "shoe-3.jpg", desc: "All-terrain grip with a street-ready aesthetic." },
+            { id: 10, name: "Circuit Belt", category: "Lifestyle", price: 85.00, img: "belt.jpg", desc: "Haptic feedback belt for subtle navigation cues." },
+            { id: 11, name: "NovaCart Vision", category: "Wearables", price: 799.00, img: "4.jpg", desc: "Augmented reality glasses for the modern professional." },
+            { id: 12, name: "Peak Performance Tee", category: "Sports", price: 55.00, img: "sports-1.jpg", desc: "Moisture-wicking smart fabric that tracks heart rate." }
         ];
 
-        let cart = JSON.parse(localStorage.getItem('novacart-bag')) || [];
+        // --- State ---
+        let cart = JSON.parse(localStorage.getItem('novacart_cart')) || [];
+        let isDarkMode = localStorage.getItem('novacart_theme') === 'dark';
 
-        // Initialization
-        window.onload = () => {
+        // --- DOM Elements ---
+        const productGrid = document.getElementById('product-grid');
+        const cartDrawer = document.getElementById('cart-drawer');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const cartBtn = document.getElementById('cart-btn');
+        const closeCart = document.getElementById('close-cart');
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const cartCount = document.getElementById('cart-count');
+        const cartTotal = document.getElementById('cart-total');
+        const searchInput = document.getElementById('search-input');
+        const themeBtn = document.getElementById('theme-btn');
+
+        // --- Initialization ---
+        function init() {
             renderProducts(products);
             updateCartUI();
-            
-            // Search Event
-            document.getElementById('search-input').addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                const filtered = products.filter(p => 
-                    p.name.toLowerCase().includes(term) || 
-                    p.category.toLowerCase().includes(term)
-                );
-                renderProducts(filtered);
-            });
+            applyTheme();
+            setupScrollReveal();
+        }
 
-            // AI Input Event
-            document.getElementById('ai-input').addEventListener('keypress', (e) => {
-                if(e.key === 'Enter') sendMessage();
-            });
-        };
+        // --- Theme Logic ---
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+            themeBtn.innerText = isDarkMode ? '☀️' : '🌙';
+        }
 
-        // Render Functions
+        themeBtn.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('novacart_theme', isDarkMode ? 'dark' : 'light');
+            applyTheme();
+        });
+
+        // --- Render Products ---
         function renderProducts(items) {
-            const container = document.getElementById('product-list');
-            container.innerHTML = items.map(p => `
-                <div class="product-card">
-                    <img src="images/${p.img}" alt="${p.name}" class="product-img">
+            productGrid.innerHTML = items.map(p => `
+                <div class="product-card reveal">
+                    <img src="images/${p.img}" alt="${p.name}" class="product-image">
                     <div class="product-info">
                         <div class="product-category">${p.category}</div>
                         <h3 class="product-name">${p.name}</h3>
                         <p class="product-desc">${p.desc}</p>
-                        <div class="product-footer">
-                            <span class="price">$${p.price}</span>
-                            <button class="add-to-cart" onclick="addToCart(${p.id})">Add to Bag</button>
+                        <div class="product-price">
+                            $${p.price.toFixed(2)}
+                            <button class="add-to-bag" onclick="addToCart(${p.id})">Add to Bag</button>
                         </div>
                     </div>
                 </div>
             `).join('');
+            setupScrollReveal();
         }
 
-        // Cart Functions
-        function toggleCart() {
-            document.getElementById('cart-drawer').classList.toggle('open');
-        }
-
-        function addToCart(id) {
+        // --- Cart Logic ---
+        window.addToCart = (id) => {
             const product = products.find(p => p.id === id);
-            const exists = cart.find(item => item.id === id);
+            const existing = cart.find(item => item.id === id);
             
-            if (exists) {
-                exists.quantity += 1;
+            if (existing) {
+                existing.qty++;
             } else {
-                cart.push({ ...product, quantity: 1 });
+                cart.push({ ...product, qty: 1 });
             }
             
-            saveAndUpdate();
-            toggleCart();
-        }
-
-        function changeQty(id, delta) {
-            const item = cart.find(i => i.id === id);
-            if (item) {
-                item.quantity += delta;
-                if (item.quantity <= 0) {
-                    cart = cart.filter(i => i.id !== id);
-                }
-            }
-            saveAndUpdate();
-        }
-
-        function saveAndUpdate() {
-            localStorage.setItem('novacart-bag', JSON.stringify(cart));
             updateCartUI();
-        }
+            openCart();
+        };
 
         function updateCartUI() {
-            const container = document.getElementById('cart-items-container');
-            const count = document.getElementById('cart-count');
-            const total = document.getElementById('cart-total');
+            localStorage.setItem('novacart_cart', JSON.stringify(cart));
             
-            let totalItems = 0;
-            let totalPrice = 0;
+            // Update Count
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            cartCount.innerText = totalQty;
 
-            container.innerHTML = cart.map(item => {
-                totalItems += item.quantity;
-                totalPrice += item.price * item.quantity;
-                return `
+            // Update List
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `<p style="text-align:center; margin-top:50px; color:#86868b;">Your NovaCart bag is empty.</p>`;
+            } else {
+                cartItemsContainer.innerHTML = cart.map(item => `
                     <div class="cart-item">
                         <img src="images/${item.img}" alt="${item.name}">
-                        <div class="cart-item-info">
-                            <h4>${item.name}</h4>
-                            <p>$${item.price}</p>
-                            <div class="qty-controls">
+                        <div class="cart-item-details">
+                            <div style="font-weight:600">${item.name}</div>
+                            <div style="color:#86868b">$${item.price.toFixed(2)}</div>
+                            <div class="cart-item-qty">
                                 <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
-                                <span>${item.quantity}</span>
+                                <span>${item.qty}</span>
                                 <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
                             </div>
                         </div>
+                        <button onclick="removeFromCart(${item.id})" style="background:none; border:none; cursor:pointer; color:var(--text); opacity:0.5;">&times;</button>
                     </div>
-                `;
-            }).join('');
-
-            if(cart.length === 0) {
-                container.innerHTML = `<p style="text-align:center; margin-top: 2rem; opacity: 0.5;">Your NovaCart is empty.</p>`;
+                `).join('');
             }
 
-            count.innerText = totalItems;
-            total.innerText = `$${totalPrice.toFixed(2)}`;
+            // Update Total
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            cartTotal.innerText = `$${total.toFixed(2)}`;
         }
 
-        // Theme Toggle
-        function toggleTheme() {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', next);
+        window.changeQty = (id, delta) => {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) {
+                    removeFromCart(id);
+                } else {
+                    updateCartUI();
+                }
+            }
+        };
+
+        window.removeFromCart = (id) => {
+            cart = cart.filter(i => i.id !== id);
+            updateCartUI();
+        };
+
+        function openCart() {
+            cartDrawer.classList.add('active');
+            cartOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
-        // Gemini AI Mock Chat
-        function toggleAI() {
-            const win = document.getElementById('ai-window');
-            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+        function closeCartDrawer() {
+            cartDrawer.classList.remove('active');
+            cartOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
 
-        async function sendMessage() {
-            const input = document.getElementById('ai-input');
-            const msg = input.value.trim();
-            if (!msg) return;
+        cartBtn.addEventListener('click', openCart);
+        closeCart.addEventListener('click', closeCartDrawer);
+        cartOverlay.addEventListener('click', closeCartDrawer);
 
-            const container = document.getElementById('ai-messages');
-            container.innerHTML += `<div class="msg user">${msg}</div>`;
-            input.value = '';
+        // --- Search Logic ---
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = products.filter(p => 
+                p.name.toLowerCase().includes(term) || 
+                p.desc.toLowerCase().includes(term) ||
+                p.category.toLowerCase().includes(term)
+            );
+            renderProducts(filtered);
+        });
 
-            // Auto scroll
-            container.scrollTop = container.scrollHeight;
+        // --- Scroll Reveal Animation ---
+        function setupScrollReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
 
-            // Mock Gemini API Response (Simulated)
-            setTimeout(() => {
-                let response = "I'm analyzing the NovaCart inventory for you. Our latest smart wearables like the Titanium Chrono feature advanced bio-tracking. How else can I help?";
-                if(msg.toLowerCase().includes('belt')) response = "Our Nova Belt G1 is a masterpiece of haptic engineering, providing subtle posture corrections and smart alerts.";
-                if(msg.toLowerCase().includes('price')) response = "NovaCart products range from $65 to $599, ensuring premium tech access for every segment.";
-                
-                container.innerHTML += `<div class="msg bot">${response}</div>`;
-                container.scrollTop = container.scrollHeight;
-            }, 1000);
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         }
+
+        // Start
+        init();
     </script>
 </body>
 </html>
