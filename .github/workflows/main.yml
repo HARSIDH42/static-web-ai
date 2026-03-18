@@ -49,10 +49,16 @@ jobs:
           WEBSITE IDEA
           A premium Smart Gadgets Store selling modern tech accessories.
 
+          AVAILABLE IMAGES
+          {image_list_text}
+          
+          IMAGE RULES
+          - Use ONLY these images
+          - Path: images/FILENAME
+          - Do NOT invent images
+
           IMPORTANT RULES
           - Replace every instance of "page" with "NovaCart"
-          - Do NOT use any images
-          - Use CSS placeholders for product visuals
 
           FUNCTIONALITY
           - Add to Bag (localStorage)
