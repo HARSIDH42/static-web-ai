@@ -82,6 +82,7 @@ jobs:
           - All JS inside <script>
           - Give description to the products
           - functionality common for all e-commerce websites
+          - add chatbot
 
           DESIGN
           - Light mode and Dark mode
