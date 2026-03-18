@@ -40,6 +40,9 @@ jobs:
           ROLE
           You are a senior frontend engineer building a premium 2026 modern e-commerce storefront.
 
+          GOAL
+          Create a LONG, visually rich, scroll-heavy premium website like Apple / Tesla / Nothing.
+          
           BRAND NAME
           NovaCart
 
@@ -70,7 +73,7 @@ jobs:
           - Responsive CSS grid
           - Modern typography
           - Premium minimalist layout
-
+          
           OUTPUT
           Return ONLY a complete working index.html file.
           """
