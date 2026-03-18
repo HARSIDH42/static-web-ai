@@ -1,0 +1,26 @@
+```html
+<div class="feedback-modal-overlay">
+    <div class="feedback-modal-content">
+        <button type="button" class="feedback-close-button">&times;</button>
+        <h3>Provide Feedback</h3>
+        <p>Your input helps us improve! Please share your thoughts below.</p>
+
+        <form id="feedback-form">
+            <div class="form-group">
+                <label for="feedback-text">Your Feedback:</label>
+                <textarea id="feedback-text" name="feedback" rows="6" placeholder="What can we do better? What did you like? What issues did you encounter?" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="feedback-email">Your Email (optional):</label>
+                <input type="email" id="feedback-email" name="email" placeholder="email@example.com">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="feedback-submit-button">Send Feedback</button>
+                <button type="button" class="feedback-cancel-button">Cancel</button>
+            </div>
+        </form>
+
+        <div id="feedback-message" class="feedback-message" style="display: none;"></div>
+    </div>
+</div>
+```

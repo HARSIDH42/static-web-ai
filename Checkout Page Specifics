@@ -1,0 +1,87 @@
+if (document.body.classList.contains('checkout-page')) {
+        const billingSameAsShippingCheckbox = document.getElementById('billingSameAsShipping');
+        const billingAddressSection = document.getElementById('billing-address-section');
+        const checkoutCartItemsContainer = document.getElementById('checkout-cart-items');
+        const checkoutSubtotalElement = document.getElementById('checkout-subtotal');
+        const checkoutShippingElement = document.getElementById('checkout-shipping');
+        const checkoutTotalElement = document.getElementById('checkout-total');
+        const placeOrderButton = document.querySelector('.place-order-button');
+        const checkoutForm = document.querySelector('.checkout-form');
+
+        // Toggle billing address section visibility
+        if (billingSameAsShippingCheckbox) {
+            billingSameAsShippingCheckbox.addEventListener('change', () => {
+                billingAddressSection.style.display = billingSameAsShippingCheckbox.checked ? 'none' : 'block';
+                // Add or remove 'required' attribute for billing fields
+                billingAddressSection.querySelectorAll('input, select').forEach(field => {
+                    if (billingSameAsShippingCheckbox.checked) {
+                        field.removeAttribute('required');
+                    } else {
+                        field.setAttribute('required', 'true');
+                    }
+                });
+            });
+            // Initial state
+            billingSameAsShippingCheckbox.dispatchEvent(new Event('change'));
+        }
+
+        function renderCheckoutSummary() {
+            checkoutCartItemsContainer.innerHTML = '';
+            if (cart.length === 0) {
+                checkoutCartItemsContainer.innerHTML = '<p>No items in cart. Please go to <a href="cart.html">cart</a> to add items.</p>';
+                placeOrderButton.disabled = true;
+                checkoutSubtotalElement.textContent = '$0.00';
+                checkoutShippingElement.textContent = '$0.00';
+                checkoutTotalElement.textContent = '$0.00';
+                return;
+            }
+            placeOrderButton.disabled = false;
+
+            let subtotal = 0;
+            const shippingCost = 10.00; // Example flat rate
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                const summaryItem = document.createElement('div');
+                summaryItem.classList.add('cart-item');
+                summaryItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px;">
+                    <div class="cart-item-details" style="flex-grow: 1;">
+                        <h3 style="font-size: 1rem; margin-bottom: 0;"><a href="product-detail.html?id=${item.id}">${item.name}</a></h3>
+                        <p style="font-size: 0.9rem; margin-bottom: 0;">${item.quantity} x $${item.price.toFixed(2)}</p>
+                    </div>
+                    <span class="price">$${itemTotal.toFixed(2)}</span>
+                `;
+                checkoutCartItemsContainer.appendChild(summaryItem);
+            });
+
+            checkoutSubtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+            checkoutShippingElement.textContent = `$${shippingCost.toFixed(2)}`;
+            checkoutTotalElement.textContent = `$${(subtotal + shippingCost).toFixed(2)}`;
+        }
+        renderCheckoutSummary();
+
+        // Simulate order placement
+        if (checkoutForm) {
+            checkoutForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (cart.length === 0) {
+                    alert("Your cart is empty. Please add items before placing an order.");
+                    return;
+                }
+                alert('Order Placed Successfully! (This is a static demo. No actual payment processed.)');
+                // In a real application:
+                // 1. Send form data to server
+                // 2. Process payment
+                // 3. Clear cart
+                cart = [];
+                saveCart();
+                window.location.href = 'index.html'; // Redirect to home or an order confirmation page
+            });
+        }
+    }
+
+
+    //

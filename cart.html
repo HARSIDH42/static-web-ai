@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Shopping Cart</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; background-color: #f4f4f4; }
+        .container { max-width: 960px; margin: auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; }
+        .cart-items { border-top: 1px solid #eee; padding-top: 20px; }
+        .cart-item { display: flex; align-items: center; border-bottom: 1px solid #eee; padding: 15px 0; }
+        .cart-item:last-child { border-bottom: none; }
+        .item-image img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; margin-right: 20px; }
+        .item-details { flex-grow: 1; }
+        .item-details h3 { margin: 0 0 5px 0; color: #333; font-size: 1.1em; }
+        .item-details p { margin: 0; color: #777; font-size: 0.9em; }
+        .item-price { font-weight: bold; color: #007bff; width: 100px; text-align: right; }
+        .item-quantity { display: flex; align-items: center; width: 120px; justify-content: flex-end; }
+        .item-quantity input { width: 40px; text-align: center; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin: 0 5px; }
+        .item-quantity button { background-color: #007bff; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
+        .item-quantity button:hover { background-color: #0056b3; }
+        .remove-item { background-color: #dc3545; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; margin-left: 15px; }
+        .remove-item:hover { background-color: #c82333; }
+
+        .cart-summary { margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; text-align: right; }
+        .cart-summary div { margin-bottom: 10px; font-size: 1.1em; }
+        .cart-summary .total { font-size: 1.4em; font-weight: bold; color: #333; }
+        .checkout-btn { background-color: #28a745; color: white; padding: 15px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 1.2em; margin-top: 20px; }
+        .checkout-btn:hover { background-color: #218838; }
+        .empty-cart-message { text-align: center; color: #777; font-size: 1.2em; padding: 50px 0; }
+        .back-to-shop { display: block; text-align: center; margin-top: 30px; color: #007bff; text-decoration: none; }
+        .back-to-shop:hover { text-decoration: underline; }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Shopping Cart</h1>
+
+        <div class="cart-items" id="cartItems">
+            <!-- Example Cart Item (will be populated dynamically in a real app) -->
+            <div class="cart-item" data-id="101">
+                <div class="item-image">
+                    <img src="https://via.placeholder.com/80x80?text=Product+A" alt="Product A">
+                </div>
+                <div class="item-details">
+                    <h3>Awesome Product A</h3>
+                    <p>Color: Red, Size: M</p>
+                </div>
+                <div class="item-price">$29.99</div>
+                <div class="item-quantity">
+                    <button class="quantity-btn" data-action="decrease">-</button>
+                    <input type="number" value="1" min="1" readonly>
+                    <button class="quantity-btn" data-action="increase">+</button>
+                </div>
+                <button class="remove-item">Remove</button>
+            </div>
+
+            <div class="cart-item" data-id="102">
+                <div class="item-image">
+                    <img src="https://via.placeholder.com/80x80?text=Product+B" alt="Product B">
+                </div>
+                <div class="item-details">
+                    <h3>Super Widget B</h3>
+                    <p>Material: Aluminum</p>
+                </div>
+                <div class="item-price">$12.50</div>
+                <div class="item-quantity">
+                    <button class="quantity-btn" data-action="decrease">-</button>
+                    <input type="number" value="2" min="1" readonly>
+                    <button class="quantity-btn" data-action="increase">+</button>
+                </div>
+                <button class="remove-item">Remove</button>
+            </div>
+
+            <div class="cart-item" data-id="103">
+                <div class="item-image">
+                    <img src="https://via.placeholder.com/80x80?text=Product+C" alt="Product C">
+                </div>
+                <div class="item-details">
+                    <h3>Fancy Gadget C</h3>
+                    <p>Wireless, Rechargeable</p>
+                </div>
+                <div class="item-price">$75.00</div>
+                <div class="item-quantity">
+                    <button class="quantity-btn" data-action="decrease">-</button>
+                    <input type="number" value="1" min="1" readonly>
+                    <button class="quantity-btn" data-action="increase">+</button>
+                </div>
+                <button class="remove-item">Remove</button>
+            </div>
+
+            <!-- If the cart is empty, you could show this: -->
+            <!-- <p class="empty-cart-message">Your cart is currently empty. Start shopping!</p> -->
+        </div>
+
+        <div class="cart-summary">
+            <div>Subtotal: <span id="cartSubtotal">$129.99</span></div>
+            <div>Shipping: <span id="cartShipping">$5.00</span></div>
+            <div class="total">Total: <span id="cartTotal">$134.99</span></div>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+
+        <a href="product_detail.html" class="back-to-shop">Continue Shopping</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cartItemsContainer = document.getElementById('cartItems');
+
+            // Function to update cart totals (placeholder logic)
+            function updateCartTotals() {
+                let subtotal = 0;
+                document.querySelectorAll('.cart-item').forEach(item => {
+                    const priceText = item.querySelector('.item-price').textContent;
+                    const price = parseFloat(priceText.replace('$', ''));
+                    const quantity = parseInt(item.querySelector('.item-quantity input').value);
+                    subtotal += price * quantity;
+                });
+
+                document.getElementById('cartSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+                const shipping = 5.00; // Example fixed shipping
+                document.getElementById('cartShipping').textContent = `$${shipping.toFixed(2)}`;
+                document.getElementById('cartTotal').textContent = `$${(subtotal + shipping).toFixed(2)}`;
+
+                if (subtotal === 0) {
+                    cartItemsContainer.innerHTML = '<p class="empty-cart-message">Your cart is currently empty. Start shopping!</p>';
+                    document.querySelector('.cart-summary').style.display = 'none';
+                } else {
+                    document.querySelector('.cart-summary').style.display = 'block';
+                }
+            }
+
+            // Event listeners for quantity buttons
+            cartItemsContainer.addEventListener('click', (event) => {
+                if (event.target.classList.contains('quantity-btn')) {
+                    const button = event.target;
+                    const input = button.parentNode.querySelector('input[type="number"]');
+                    let quantity = parseInt(input.value);
+
+                    if (button.dataset.action === 'decrease' && quantity > 1) {
+                        quantity--;
+                    } else if (button.dataset.action === 'increase') {
+                        quantity++;
+                    }
+                    input.value = quantity;
+                    updateCartTotals(); // Recalculate totals
+                }
+
+                // Event listener for remove item buttons
+                if (event.target.classList.contains('remove-item')) {
+                    const itemToRemove = event.target.closest('.cart-item');
+                    itemToRemove.remove();
+                    updateCartTotals(); // Recalculate totals
+                }
+            });
+
+            // Initial calculation of totals
+            updateCartTotals();
+        });
+    </script>
+</body>
+</html>

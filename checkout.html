@@ -1,0 +1,240 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - E-Shop</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">E-Shop</a>
+            <nav class="main-nav">
+                <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <ul class="nav-list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn" aria-haspopup="true" aria-expanded="false">Categories <i class="fas fa-caret-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="shop.html?category=electronics">Electronics</a>
+                            <a href="shop.html?category=apparel">Apparel</a>
+                            <a href="shop.html?category=home-goods">Home Goods</a>
+                            <a href="shop.html?category=books">Books</a>
+                        </div>
+                    </li>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="nav-icons">
+                <a href="#" class="icon-btn" aria-label="Search"><i class="fas fa-search"></i></a>
+                <a href="#" class="icon-btn" aria-label="User Account"><i class="fas fa-user"></i></a>
+                <a href="cart.html" class="icon-btn cart-icon" aria-label="Shopping Cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="checkout-page">
+        <section class="page-banner" style="background-image: url('https://images.unsplash.com/photo-1560523030-f86a117b960b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
+            <div class="container">
+                <h1>Checkout</h1>
+                <p>Complete your purchase.</p>
+            </div>
+        </section>
+
+        <section class="checkout-section section-padding">
+            <div class="container">
+                <form class="checkout-form">
+                    <div class="form-section">
+                        <h2>1. Shipping Address</h2>
+                        <div class="form-group">
+                            <label for="fullName">Full Name:</label>
+                            <input type="text" id="fullName" name="fullName" required aria-required="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="address1">Address Line 1:</label>
+                            <input type="text" id="address1" name="address1" required aria-required="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="address2">Address Line 2 (Optional):</label>
+                            <input type="text" id="address2" name="address2">
+                        </div>
+                        <div class="form-group-row">
+                            <div class="form-group">
+                                <label for="city">City:</label>
+                                <input type="text" id="city" name="city" required aria-required="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State/Province:</label>
+                                <input type="text" id="state" name="state" required aria-required="true">
+                            </div>
+                        </div>
+                        <div class="form-group-row">
+                            <div class="form-group">
+                                <label for="zipCode">Zip/Postal Code:</label>
+                                <input type="text" id="zipCode" name="zipCode" required aria-required="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country:</label>
+                                <select id="country" name="country" required aria-required="true">
+                                    <option value="">Select Country</option>
+                                    <option value="USA">United States</option>
+                                    <option value="CAN">Canada</option>
+                                    <option value="GBR">United Kingdom</option>
+                                    <!-- Add more countries as needed -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number:</label>
+                            <input type="tel" id="phone" name="phone" required aria-required="true">
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="billingSameAsShipping" name="billingSameAsShipping">
+                            <label for="billingSameAsShipping">Billing address is the same as shipping address</label>
+                        </div>
+                    </div>
+
+                    <div class="form-section" id="billing-address-section" style="display: none;">
+                        <h2>2. Billing Address</h2>
+                        <!-- Replicate address fields or provide a simplified option -->
+                        <p>Fill out billing address details if different from shipping.</p>
+                        <div class="form-group">
+                            <label for="billingFullName">Full Name:</label>
+                            <input type="text" id="billingFullName" name="billingFullName">
+                        </div>
+                        <div class="form-group">
+                            <label for="billingAddress1">Address Line 1:</label>
+                            <input type="text" id="billingAddress1" name="billingAddress1">
+                        </div>
+                        <!-- ... other billing fields ... -->
+                    </div>
+
+                    <div class="form-section">
+                        <h2>3. Payment Information</h2>
+                        <div class="payment-methods">
+                            <div class="radio-group">
+                                <input type="radio" id="creditCard" name="paymentMethod" value="creditCard" checked>
+                                <label for="creditCard"><i class="far fa-credit-card"></i> Credit/Debit Card</label>
+                            </div>
+                            <div class="radio-group">
+                                <input type="radio" id="paypal" name="paymentMethod" value="paypal">
+                                <label for="paypal"><i class="fab fa-paypal"></i> PayPal</label>
+                            </div>
+                            <div class="radio-group">
+                                <input type="radio" id="googlePay" name="paymentMethod" value="googlePay">
+                                <label for="googlePay"><i class="fab fa-google-pay"></i> Google Pay</label>
+                            </div>
+                        </div>
+                        
+                        <div class="credit-card-details">
+                            <div class="form-group">
+                                <label for="cardNumber">Card Number:</label>
+                                <input type="text" id="cardNumber" name="cardNumber" pattern="[0-9]{13,16}" placeholder="**** **** **** ****" required aria-required="true" aria-label="Credit card number">
+                            </div>
+                            <div class="form-group">
+                                <label for="cardName">Name on Card:</label>
+                                <input type="text" id="cardName" name="cardName" required aria-required="true" aria-label="Name on credit card">
+                            </div>
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label for="expiryDate">Expiry Date:</label>
+                                    <input type="text" id="expiryDate" name="expiryDate" pattern="(0[1-9]|1[0-2])\/?([0-9]{2})" placeholder="MM/YY" required aria-required="true" aria-label="Credit card expiry date">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cvv">CVV:</label>
+                                    <input type="text" id="cvv" name="cvv" pattern="[0-9]{3,4}" placeholder="***" required aria-required="true" aria-label="Credit card CVV">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-summary-checkout">
+                        <h2>4. Order Summary</h2>
+                        <div id="checkout-cart-items">
+                            <!-- Cart items will be dynamically loaded here from JS -->
+                            <p>No items in cart. Please go to <a href="cart.html">cart</a> to add items.</p>
+                        </div>
+                        <div class="summary-details">
+                            <div class="summary-row">
+                                <span>Subtotal:</span>
+                                <span id="checkout-subtotal">$0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Shipping:</span>
+                                <span id="checkout-shipping">$0.00</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Total:</span>
+                                <span id="checkout-total">$0.00</span>
+                            </div>
+                        </div>
+                        <button type="submit" class="button primary-button place-order-button" disabled>Place Order</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h4>E-Shop</h4>
+                    <p>Your one-stop shop for everything you need. Quality products, fast shipping, and exceptional service.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Customer Service</h4>
+                    <ul>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Connect With Us</h4>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <p>Subscribe to our newsletter for updates:</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address" aria-label="Email for newsletter">
+                        <button type="submit" class="button primary-button">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 E-Shop. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+```

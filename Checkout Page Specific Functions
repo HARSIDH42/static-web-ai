@@ -1,0 +1,74 @@
+const checkoutCartItemsContainer = document.getElementById('checkout-cart-items-container');
+    const checkoutSubtotalElement = document.getElementById('checkout-subtotal');
+    const checkoutShippingElement = document.getElementById('checkout-shipping');
+    const checkoutTotalElement = document.getElementById('checkout-total');
+    const checkoutForm = document.getElementById('checkoutForm');
+    const SHIPPING_COST = 5.00; // Example static shipping cost
+
+    function renderCheckoutSummary() {
+        if (!checkoutCartItemsContainer) return;
+
+        checkoutCartItemsContainer.innerHTML = '';
+        let subtotal = 0;
+
+        if (cart.length === 0) {
+            checkoutCartItemsContainer.innerHTML = '<p class="empty-cart-message">Your cart is empty.</p>';
+            checkoutSubtotalElement.textContent = '$0.00';
+            checkoutShippingElement.textContent = '$0.00';
+            checkoutTotalElement.textContent = '$0.00';
+            if (checkoutForm) checkoutForm.querySelector('button[type="submit"]').disabled = true;
+            return;
+        } else {
+            if (checkoutForm) checkoutForm.querySelector('button[type="submit"]').disabled = false;
+        }
+
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+
+            const checkoutItemDiv = document.createElement('div');
+            checkoutItemDiv.classList.add('cart-item'); // Re-using cart-item style
+            checkoutItemDiv.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                <div class="cart-item-details">
+                    <h3>${item.name}</h3>
+                    <p>Qty: ${item.quantity}</p>
+                    <p>Price: $${item.price.toFixed(2)}</p>
+                </div>
+                <div class="cart-item-price">$${itemTotal.toFixed(2)}</div>
+            `;
+            checkoutCartItemsContainer.appendChild(checkoutItemDiv);
+        });
+
+        checkoutSubtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+        checkoutShippingElement.textContent = `$${SHIPPING_COST.toFixed(2)}`;
+        checkoutTotalElement.textContent = `$${(subtotal + SHIPPING_COST).toFixed(2)}`;
+    }
+
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // In a real application, this would send data to a server
+            // and handle payment processing.
+            alert('Order placed successfully! (This is a static demo. No actual payment processed.)');
+            
+            // Clear cart after successful "order"
+            cart = [];
+            saveCart();
+            renderCheckoutSummary(); // Update summary
+            updateCartCount(); // Update header count
+            window.location.href = 'index.html'; // Redirect to home or a confirmation page
+        });
+        renderCheckoutSummary();
+    }
+
+
+    // Initialize cart count on all pages
+    updateCartCount();
+
+    // Specific page initializations
+    if (document.querySelector('.product-detail-page')) {
+        loadProductDetails();
+    }
+});
+```

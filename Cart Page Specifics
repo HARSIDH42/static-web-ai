@@ -1,0 +1,79 @@
+if (document.body.classList.contains('cart-page')) {
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const cartSubtotalElement = document.getElementById('cart-subtotal');
+        const cartShippingElement = document.getElementById('cart-shipping');
+        const cartTotalElement = document.getElementById('cart-total');
+        const cartEmptyMessage = document.querySelector('.cart-empty-message');
+        const checkoutButton = document.querySelector('.checkout-button');
+
+        function renderCart() {
+            cartItemsContainer.innerHTML = ''; // Clear existing items
+            if (cart.length === 0) {
+                if (cartEmptyMessage) cartEmptyMessage.style.display = 'block';
+                if (checkoutButton) checkoutButton.disabled = true;
+                cartSubtotalElement.textContent = '$0.00';
+                cartShippingElement.textContent = '$0.00';
+                cartTotalElement.textContent = '$0.00';
+                return;
+            } else {
+                if (cartEmptyMessage) cartEmptyMessage.style.display = 'none';
+                if (checkoutButton) checkoutButton.disabled = false;
+            }
+
+            let subtotal = 0;
+            const shippingCost = 10.00; // Flat rate shipping example
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                const cartItemElement = document.createElement('div');
+                cartItemElement.classList.add('cart-item');
+                cartItemElement.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="cart-item-details">
+                        <h3><a href="product-detail.html?id=${item.id}">${item.name}</a></h3>
+                        <p class="price">$${item.price.toFixed(2)}</p>
+                    </div>
+                    <div class="cart-item-actions">
+                        <input type="number" value="${item.quantity}" min="1" data-item-id="${item.id}" class="item-quantity">
+                        <button class="button remove-from-cart-btn" data-item-id="${item.id}">Remove</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(cartItemElement);
+            });
+
+            cartSubtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+            cartShippingElement.textContent = `$${shippingCost.toFixed(2)}`;
+            cartTotalElement.textContent = `$${(subtotal + shippingCost).toFixed(2)}`;
+
+            // Add event listeners for quantity changes and remove buttons
+            document.querySelectorAll('.item-quantity').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const itemId = e.target.dataset.itemId;
+                    const newQuantity = parseInt(e.target.value);
+                    const item = cart.find(i => i.id === itemId);
+                    if (item && newQuantity >= 1) {
+                        item.quantity = newQuantity;
+                        saveCart();
+                        renderCart();
+                    } else if (newQuantity < 1) {
+                        e.target.value = 1; // Prevent quantity from going below 1 via direct input
+                    }
+                });
+            });
+
+            document.querySelectorAll('.remove-from-cart-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const itemId = e.target.dataset.itemId;
+                    cart = cart.filter(item => item.id !== itemId);
+                    saveCart();
+                    renderCart();
+                });
+            });
+        }
+        renderCart();
+    }
+
+
+    //

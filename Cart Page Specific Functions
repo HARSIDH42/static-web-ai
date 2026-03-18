@@ -1,0 +1,88 @@
+const cartItemsContainer = document.getElementById('cart-items-container');
+    const cartSubtotalElement = document.getElementById('cart-subtotal');
+    const cartTotalElement = document.getElementById('cart-total');
+    const emptyCartMessage = document.querySelector('.empty-cart-message');
+
+    function renderCartItems() {
+        if (!cartItemsContainer) return;
+
+        cartItemsContainer.innerHTML = ''; // Clear previous items
+
+        if (cart.length === 0) {
+            emptyCartMessage.style.display = 'block';
+            cartSubtotalElement.textContent = '$0.00';
+            cartTotalElement.textContent = '$0.00';
+            document.querySelector('.btn-checkout').disabled = true;
+            document.querySelector('.btn-checkout').classList.add('btn-disabled');
+            return;
+        } else {
+            emptyCartMessage.style.display = 'none';
+            document.querySelector('.btn-checkout').disabled = false;
+            document.querySelector('.btn-checkout').classList.remove('btn-disabled');
+        }
+
+        let subtotal = 0;
+
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+
+            const cartItemDiv = document.createElement('div');
+            cartItemDiv.classList.add('cart-item');
+            cartItemDiv.setAttribute('data-product-id', item.id);
+
+            cartItemDiv.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                <div class="cart-item-details">
+                    <h3>${item.name}</h3>
+                    <p>Price: $${item.price.toFixed(2)}</p>
+                </div>
+                <div class="cart-item-quantity">
+                    <button class="quantity-decrease" aria-label="Decrease quantity of ${item.name}">-</button>
+                    <input type="number" value="${item.quantity}" min="1" class="quantity-input" aria-label="Quantity of ${item.name}">
+                    <button class="quantity-increase" aria-label="Increase quantity of ${item.name}">+</button>
+                </div>
+                <div class="cart-item-price">$${itemTotal.toFixed(2)}</div>
+                <button class="cart-item-remove" aria-label="Remove ${item.name} from cart"><i class="fas fa-trash"></i></button>
+            `;
+            cartItemsContainer.appendChild(cartItemDiv);
+        });
+
+        cartSubtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+        cartTotalElement.textContent = `$${subtotal.toFixed(2)}`; // For static, total is subtotal
+    }
+
+    function handleCartItemChange(e) {
+        const productId = e.target.closest('.cart-item').dataset.productId;
+        const item = cart.find(i => i.id === productId);
+
+        if (!item) return;
+
+        if (e.target.classList.contains('quantity-increase')) {
+            item.quantity++;
+        } else if (e.target.classList.contains('quantity-decrease')) {
+            if (item.quantity > 1) {
+                item.quantity--;
+            }
+        } else if (e.target.classList.contains('quantity-input')) {
+            const newQuantity = parseInt(e.target.value);
+            if (!isNaN(newQuantity) && newQuantity >= 1) {
+                item.quantity = newQuantity;
+            } else {
+                e.target.value = item.quantity; // Revert to old value if invalid
+            }
+        } else if (e.target.closest('.cart-item-remove')) {
+            cart = cart.filter(i => i.id !== productId);
+        }
+
+        saveCart();
+        renderCartItems(); // Re-render the cart to reflect changes
+    }
+
+    if (cartItemsContainer) {
+        cartItemsContainer.addEventListener('click', handleCartItemChange);
+        cartItemsContainer.addEventListener('change', handleCartItemChange); // For input field changes
+        renderCartItems();
+    }
+
+    //

@@ -1,0 +1,118 @@
+const renderCartPage = () => {
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const cartSubtotalSpan = document.getElementById('cart-subtotal');
+        const cartTotalSpan = document.getElementById('cart-total');
+        const emptyCartMessage = document.querySelector('.empty-cart-message');
+
+        if (!cartItemsContainer || !cartSubtotalSpan || !cartTotalSpan) return; // Not on cart page
+
+        cartItemsContainer.innerHTML = ''; // Clear previous items
+
+        if (cart.length === 0) {
+            emptyCartMessage.style.display = 'block';
+            cartSubtotalSpan.textContent = '$0.00';
+            cartTotalSpan.textContent = '$0.00';
+            document.querySelector('.checkout-btn').setAttribute('disabled', 'true');
+            return;
+        } else {
+            emptyCartMessage.style.display = 'none';
+            document.querySelector('.checkout-btn').removeAttribute('disabled');
+        }
+
+        let subtotal = 0;
+
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+
+            const cartItemDiv = document.createElement('div');
+            cartItemDiv.classList.add('cart-item');
+            cartItemDiv.setAttribute('data-product-id', item.id);
+
+            cartItemDiv.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                <div class="cart-item-details">
+                    <h4>${item.name}</h4>
+                    <p class="cart-item-price">$${item.price.toFixed(2)}</p>
+                    <div class="cart-item-quantity">
+                        <button class="quantity-btn decrease-qty" aria-label="Decrease quantity">-</button>
+                        <input type="number" value="${item.quantity}" min="1" class="qty-input" aria-label="Quantity for ${item.name}">
+                        <button class="quantity-btn increase-qty" aria-label="Increase quantity">+</button>
+                    </div>
+                </div>
+                <button class="remove-btn" aria-label="Remove ${item.name} from cart"><i class="fas fa-trash-alt"></i></button>
+            `;
+            cartItemsContainer.appendChild(cartItemDiv);
+        });
+
+        // Update totals
+        cartSubtotalSpan.textContent = `$${subtotal.toFixed(2)}`;
+        // For a static site, shipping might be a fixed value or "Calculated at checkout"
+        // Let's assume free shipping or no complex calculation for now.
+        cartTotalSpan.textContent = `$${subtotal.toFixed(2)}`; // For simplicity, total equals subtotal
+
+        // Add event listeners for quantity buttons and remove buttons
+        cartItemsContainer.querySelectorAll('.decrease-qty').forEach(button => {
+            button.addEventListener('click', (event) => updateQuantity(event, -1));
+        });
+        cartItemsContainer.querySelectorAll('.increase-qty').forEach(button => {
+            button.addEventListener('click', (event) => updateQuantity(event, 1));
+        });
+        cartItemsContainer.querySelectorAll('.qty-input').forEach(input => {
+            input.addEventListener('change', (event) => updateQuantityDirectly(event));
+        });
+        cartItemsContainer.querySelectorAll('.remove-btn').forEach(button => {
+            button.addEventListener('click', removeFromCart);
+        });
+    };
+
+    const updateQuantity = (event, change) => {
+        const cartItemDiv = event.target.closest('.cart-item');
+        const productId = cartItemDiv.dataset.productId;
+        const qtyInput = cartItemDiv.querySelector('.qty-input');
+        let newQuantity = parseInt(qtyInput.value) + change;
+
+        if (newQuantity < 1) newQuantity = 1; // Minimum quantity is 1
+
+        qtyInput.value = newQuantity;
+        
+        const itemIndex = cart.findIndex(item => item.id === productId);
+        if (itemIndex > -1) {
+            cart[itemIndex].quantity = newQuantity;
+            saveCart();
+            updateCartCount();
+            renderCartPage(); // Re-render to update totals and possibly item rows
+        }
+    };
+
+    const updateQuantityDirectly = (event) => {
+        const cartItemDiv = event.target.closest('.cart-item');
+        const productId = cartItemDiv.dataset.productId;
+        const qtyInput = event.target;
+        let newQuantity = parseInt(qtyInput.value);
+
+        if (isNaN(newQuantity) || newQuantity < 1) {
+            newQuantity = 1; // Default to 1 if invalid or less than 1
+            qtyInput.value = newQuantity;
+        }
+
+        const itemIndex = cart.findIndex(item => item.id === productId);
+        if (itemIndex > -1) {
+            cart[itemIndex].quantity = newQuantity;
+            saveCart();
+            updateCartCount();
+            renderCartPage();
+        }
+    };
+
+    const removeFromCart = (event) => {
+        const cartItemDiv = event.target.closest('.cart-item');
+        const productId = cartItemDiv.dataset.productId;
+
+        cart = cart.filter(item => item.id !== productId);
+        saveCart();
+        updateCartCount();
+        renderCartPage(); // Re-render to update the display
+    };
+
+    //
