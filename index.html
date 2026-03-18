@@ -1,123 +1,130 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NovaCart | Premium Tech & Lifestyle</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@200;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #ffffff;
-            --fg: #000000;
-            --accent: #0071e3;
+            --text: #000000;
+            --accent: #2563eb;
+            --glass: rgba(255, 255, 255, 0.7);
             --card-bg: #f5f5f7;
-            --nav-bg: rgba(255, 255, 255, 0.8);
-            --border: #d2d2d7;
-            --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --border: #e5e7eb;
+            --cart-bg: #ffffff;
+            --transition: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        [data-theme="dark"] {
+        .dark-mode {
             --bg: #000000;
-            --fg: #ffffff;
-            --accent: #2997ff;
-            --card-bg: #161617;
-            --nav-bg: rgba(0, 0, 0, 0.8);
-            --border: #424245;
+            --text: #ffffff;
+            --accent: #60a5fa;
+            --glass: rgba(0, 0, 0, 0.7);
+            --card-bg: #111111;
+            --border: #262626;
+            --cart-bg: #0a0a0a;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, sans-serif;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
         }
 
         body {
             background-color: var(--bg);
-            color: var(--fg);
+            color: var(--text);
+            transition: background-color 0.5s var(--transition), color 0.5s var(--transition);
             overflow-x: hidden;
-            transition: background-color 0.5s ease;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        h1, h2, h3 { font-family: 'Outfit', sans-serif; }
 
-        /* Navigation */
-        nav {
+        /* --- Header --- */
+        header {
             position: fixed;
             top: 0;
             width: 100%;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 5%;
             z-index: 1000;
-            background: var(--nav-bg);
+            background: var(--glass);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 5%;
         }
 
         .logo {
-            font-weight: 800;
             font-size: 1.5rem;
+            font-weight: 800;
             letter-spacing: -1px;
             cursor: pointer;
         }
 
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
+        nav { display: flex; gap: 2rem; align-items: center; }
+        
+        .nav-link { 
+            text-decoration: none; 
+            color: var(--text); 
+            font-weight: 500; 
+            opacity: 0.7; 
+            transition: 0.3s;
         }
+        .nav-link:hover { opacity: 1; }
 
-        .search-container {
-            position: relative;
-            width: 250px;
-        }
+        .header-tools { display: flex; gap: 1.5rem; align-items: center; }
 
-        .search-input {
-            width: 100%;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            padding: 8px 15px;
+        .search-container { position: relative; }
+        #search-input {
+            padding: 0.5rem 1rem;
             border-radius: 20px;
-            color: var(--fg);
-            outline: none;
-            font-size: 0.9rem;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            width: 180px;
+            transition: 0.3s;
         }
+        #search-input:focus { width: 250px; outline: none; border-color: var(--accent); }
 
-        .cart-trigger {
+        .cart-icon {
             position: relative;
             cursor: pointer;
-            font-weight: 500;
+            padding: 5px;
         }
-
         .cart-count {
             position: absolute;
-            top: -10px;
-            right: -15px;
+            top: -5px;
+            right: -5px;
             background: var(--accent);
             color: white;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-weight: bold;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .theme-toggle {
             cursor: pointer;
-            padding: 5px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            border: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--card-bg);
         }
 
-        /* Hero Section */
+        /* --- Hero Section --- */
         .hero {
             height: 100vh;
             display: flex;
@@ -125,473 +132,539 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: radial-gradient(circle at center, var(--card-bg) 0%, var(--bg) 100%);
-            padding: 0 20px;
+            padding: 0 10%;
+            background: radial-gradient(circle at center, var(--accent) 0%, transparent 70%);
+            background-size: 200% 200%;
+            animation: gradientMove 10s infinite alternate;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
         }
 
         .hero h1 {
-            font-size: clamp(3rem, 10vw, 8rem);
+            font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 800;
-            line-height: 0.9;
-            margin-bottom: 20px;
-            letter-spacing: -4px;
+            margin-bottom: 1.5rem;
+            line-height: 1;
         }
 
         .hero p {
-            font-size: 1.5rem;
-            opacity: 0.7;
+            font-size: 1.2rem;
             max-width: 600px;
-            margin-bottom: 40px;
+            opacity: 0.8;
+            margin-bottom: 2rem;
         }
 
-        .btn {
-            padding: 18px 40px;
-            background: var(--fg);
+        .btn-primary {
+            padding: 1rem 2.5rem;
+            background: var(--text);
             color: var(--bg);
-            border-radius: 30px;
             text-decoration: none;
+            border-radius: 50px;
             font-weight: 600;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
+            transition: 0.3s;
         }
+        .btn-primary:hover { transform: scale(1.05); }
 
-        .btn:hover {
-            transform: scale(1.05);
-            opacity: 0.9;
-        }
-
-        /* Product Grid */
-        .container {
-            padding: 100px 5%;
-        }
-
+        /* --- Product Grid --- */
         .section-title {
-            font-size: 3rem;
-            margin-bottom: 60px;
-            font-weight: 700;
+            padding: 4rem 5% 2rem;
+            font-size: 2.5rem;
+            text-align: center;
         }
 
-        .grid {
+        .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 40px;
+            gap: 2rem;
+            padding: 0 5% 5rem;
         }
 
         .product-card {
             background: var(--card-bg);
             border-radius: 24px;
-            padding: 20px;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
+            padding: 1.5rem;
+            transition: 0.5s var(--transition);
+            border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
         }
 
         .product-card:hover {
             transform: translateY(-10px);
-            border-color: var(--border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
-        .product-img {
+        .product-image {
             width: 100%;
-            aspect-ratio: 1;
+            height: 350px;
             object-fit: cover;
             border-radius: 16px;
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
+            transition: 0.5s;
         }
 
-        .product-info h3 {
-            font-size: 1.4rem;
-            margin-bottom: 8px;
+        .product-card:hover .product-image {
+            transform: scale(1.05);
         }
 
-        .product-desc {
-            font-size: 0.9rem;
-            opacity: 0.6;
-            margin-bottom: 15px;
+        .product-info h3 { margin-bottom: 0.5rem; }
+        .product-info p { 
+            font-size: 0.9rem; 
+            opacity: 0.6; 
+            margin-bottom: 1rem;
             line-height: 1.4;
         }
+        .price { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
 
-        .product-price {
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-        }
-
-        .add-btn {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
+        .add-to-cart {
+            padding: 0.8rem;
             background: var(--accent);
             color: white;
             border: none;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
-            transition: var(--transition);
+            transition: 0.3s;
         }
+        .add-to-cart:hover { opacity: 0.9; }
 
-        .add-btn:hover { opacity: 0.8; }
-
-        /* Cart Drawer */
-        .cart-drawer {
+        /* --- Cart Drawer --- */
+        .cart-overlay {
             position: fixed;
             top: 0;
             right: -100%;
-            width: 400px;
-            height: 100vh;
-            background: var(--bg);
-            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
             z-index: 2000;
-            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 40px;
+            transition: 0.5s;
+        }
+        .cart-overlay.active { right: 0; }
+
+        .cart-drawer {
+            position: absolute;
+            right: 0;
+            width: 100%;
+            max-width: 450px;
+            height: 100%;
+            background: var(--cart-bg);
+            padding: 2rem;
             display: flex;
             flex-direction: column;
         }
-
-        .cart-drawer.active { right: 0; }
 
         .cart-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
         }
 
-        .close-cart {
-            cursor: pointer;
-            font-size: 1.5rem;
-        }
+        .close-cart { cursor: pointer; font-size: 1.5rem; }
 
         .cart-items {
-            flex-grow: 1;
+            flex: 1;
             overflow-y: auto;
+            margin-bottom: 2rem;
         }
 
         .cart-item {
             display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .cart-item-img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .cart-item-info { flex-grow: 1; }
-
-        .qty-controls {
-            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
             align-items: center;
-            gap: 10px;
-            margin-top: 10px;
         }
-
-        .qty-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            color: var(--fg);
-            width: 25px;
-            height: 25px;
-            border-radius: 5px;
+        .cart-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
+        .cart-item-info { flex: 1; }
+        .qty-controls { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+        .qty-btn { 
+            width: 25px; height: 25px; 
+            border: 1px solid var(--border); 
+            background: none; 
+            color: var(--text);
             cursor: pointer;
+            border-radius: 4px;
         }
 
         .cart-footer {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 2px solid var(--border);
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
         }
-
         .total-row {
             display: flex;
             justify-content: space-between;
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
         }
 
-        .overlay {
+        /* --- AI Chatbot --- */
+        #ai-chatbot {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .chat-bubble {
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            color: white;
+            font-size: 1.5rem;
+        }
+        .chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 300px;
+            background: var(--cart-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
             display: none;
-            z-index: 1500;
-            backdrop-filter: blur(5px);
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
+        .chat-header { padding: 1rem; background: var(--accent); color: white; font-weight: 600; }
+        .chat-messages { height: 300px; overflow-y: auto; padding: 1rem; font-size: 0.9rem; }
+        .chat-input { display: flex; border-top: 1px solid var(--border); }
+        .chat-input input { flex: 1; border: none; padding: 0.8rem; background: transparent; color: var(--text); outline: none; }
+        .chat-input button { padding: 0.8rem; border: none; background: var(--accent); color: white; cursor: pointer; }
 
-        .overlay.active { display: block; }
-
-        /* Animations */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: 1s all ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
+        /* --- Footer --- */
         footer {
-            padding: 100px 5%;
+            padding: 5rem 5%;
             background: var(--card-bg);
-            margin-top: 100px;
-        }
-
-        .footer-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
         }
+        .footer-col h4 { margin-bottom: 1.5rem; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 0.8rem; opacity: 0.7; cursor: pointer; transition: 0.3s; }
+        .footer-col ul li:hover { opacity: 1; padding-left: 5px; }
 
+        /* Responsiveness */
         @media (max-width: 768px) {
-            .cart-drawer { width: 100%; }
-            .hero h1 { font-size: 4rem; }
-            .footer-grid { grid-template-columns: 1fr 1fr; }
-            .search-container { display: none; }
+            nav, .search-container { display: none; }
+            .hero h1 { font-size: 3rem; }
+            .cart-drawer { max-width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo" onclick="window.scrollTo({top:0, behavior:'smooth'})">NOVACART</div>
-        <div class="nav-right">
+    <header>
+        <div class="logo" onclick="window.scrollTo(0,0)">NovaCart.</div>
+        <nav>
+            <a href="#shop" class="nav-link">Wearables</a>
+            <a href="#shop" class="nav-link">Accessories</a>
+            <a href="#shop" class="nav-link">New Releases</a>
+        </nav>
+        <div class="header-tools">
             <div class="search-container">
-                <input type="text" class="search-input" placeholder="Search products..." id="searchInput">
+                <input type="text" id="search-input" placeholder="Search NovaCart...">
             </div>
-            <div class="theme-toggle" id="themeToggle">🌓</div>
-            <div class="cart-trigger" onclick="toggleCart()">
-                BAG <span class="cart-count" id="cartCount">0</span>
+            <div class="theme-toggle" id="theme-btn">🌓</div>
+            <div class="cart-icon" id="cart-btn">
+                🛒
+                <span class="cart-count">0</span>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <div class="overlay" id="overlay" onclick="toggleCart()"></div>
+    <main>
+        <section class="hero">
+            <h1>Tomorrow's NovaCart, Today.</h1>
+            <p>Experience the next generation of premium tech accessories. Meticulously designed, engineered for life, and curated for the NovaCart lifestyle.</p>
+            <a href="#shop" class="btn-primary">Explore NovaCart Collection</a>
+        </section>
 
-    <div class="cart-drawer" id="cartDrawer">
-        <div class="cart-header">
-            <h2>Your Bag</h2>
-            <span class="close-cart" onclick="toggleCart()">✕</span>
+        <h2 class="section-title" id="shop">The NovaCart Essentials</h2>
+        <div class="product-grid" id="product-grid">
+            <!-- Products will be injected by JavaScript -->
         </div>
-        <div class="cart-items" id="cartItems">
-            <!-- Items injected by JS -->
-        </div>
-        <div class="cart-footer">
-            <div class="total-row">
-                <span>Total</span>
-                <span id="cartTotal">$0.00</span>
+
+        <section class="hero" style="background: var(--card-bg); height: 60vh;">
+            <h2>The NovaCart Standard</h2>
+            <p>Every single NovaCart product undergoes rigorous testing to ensure it meets our 2026 standards of excellence and sustainability.</p>
+        </section>
+    </main>
+
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cart-overlay">
+        <div class="cart-drawer">
+            <div class="cart-header">
+                <h2>Your NovaCart Bag</h2>
+                <div class="close-cart" id="close-cart">&times;</div>
             </div>
-            <button class="btn" style="width: 100%">Checkout from NovaCart</button>
+            <div class="cart-items" id="cart-items-container">
+                <!-- Cart items here -->
+            </div>
+            <div class="cart-footer">
+                <div class="total-row">
+                    <span>Subtotal</span>
+                    <span id="cart-total">$0.00</span>
+                </div>
+                <button class="btn-primary" style="width: 100%; border: none; cursor: pointer;">Checkout NovaCart Order</button>
+            </div>
         </div>
     </div>
 
-    <section class="hero">
-        <h1 class="reveal">The Future <br>is NovaCart.</h1>
-        <p class="reveal">Experience high-performance tech accessories designed for the modern era. Precision, quality, and soul in every piece.</p>
-        <a href="#collection" class="btn reveal">Shop the Collection</a>
-    </section>
-
-    <div class="container" id="collection">
-        <h2 class="section-title reveal">Featured Innovation</h2>
-        <div class="grid" id="productGrid">
-            <!-- Products injected by JS -->
+    <!-- AI Chatbot -->
+    <div id="ai-chatbot">
+        <div class="chat-window" id="chat-window">
+            <div class="chat-header">NovaCart Assistant</div>
+            <div class="chat-messages" id="chat-messages">
+                <div>Hello! How can I help you find the perfect NovaCart product today?</div>
+            </div>
+            <form class="chat-input" id="chat-form">
+                <input type="text" id="chat-input-field" placeholder="Ask NovaCart AI...">
+                <button type="submit">Send</button>
+            </form>
         </div>
+        <div class="chat-bubble" id="chat-toggle">AI</div>
     </div>
 
     <footer>
-        <div class="footer-grid">
-            <div>
-                <h3>NovaCart</h3>
-                <p style="opacity: 0.6; margin-top: 20px;">Defining the standard of premium retail since 2026.</p>
-            </div>
-            <div>
-                <h4>Explore</h4>
-                <p style="opacity: 0.6; margin-top: 10px;">Smart Watches</p>
-                <p style="opacity: 0.6;">Audio Gear</p>
-                <p style="opacity: 0.6;">Apparel</p>
-            </div>
-            <div>
-                <h4>Support</h4>
-                <p style="opacity: 0.6; margin-top: 10px;">Order Status</p>
-                <p style="opacity: 0.6;">NovaCart Returns</p>
-                <p style="opacity: 0.6;">Contact Us</p>
-            </div>
-            <div>
-                <h4>Newsletter</h4>
-                <div class="search-container" style="width: 100%; margin-top: 10px;">
-                    <input type="text" class="search-input" placeholder="email@novacart.com">
-                </div>
-            </div>
+        <div class="footer-col">
+            <div class="logo">NovaCart.</div>
+            <p style="margin-top: 1rem; opacity: 0.6;">Redefining the digital shopping NovaCart experience for the year 2026 and beyond.</p>
         </div>
-        <div style="margin-top: 80px; opacity: 0.4; font-size: 0.8rem; text-align: center;">
-            &copy; 2026 NovaCart International. All rights reserved.
+        <div class="footer-col">
+            <h4>Products</h4>
+            <ul>
+                <li>Smart Watches</li>
+                <li>Premium Audio</li>
+                <li>Activewear</li>
+                <li>Tech Accessories</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <ul>
+                <li>NovaCart Shipping</li>
+                <li>Returns Policy</li>
+                <li>Contact Us</li>
+                <li>FAQ</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Newsletter</h4>
+            <input type="email" placeholder="Email address" style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); width: 100%; margin-bottom: 1rem; background: var(--bg); color: var(--text);">
+            <button class="btn-primary" style="width: 100%; padding: 0.8rem; border: none; cursor: pointer;">Join NovaCart</button>
         </div>
     </footer>
 
     <script>
+        // Product Data
         const products = [
-            { id: 1, name: "Nova Pro Watch", price: 499, img: "images/watch-1.jpg", desc: "A titanium aerospace-grade casing with a 120Hz OLED display." },
-            { id: 2, name: "Vanguard Jacket", price: 350, img: "images/jacket-1.jpg", desc: "Weatherproof membrane with integrated heating filaments." },
-            { id: 3, name: "Aero Sneaker X1", price: 199, img: "images/shoe-1.jpg", desc: "Carbon-fiber plate propulsion for ultimate urban exploration." },
-            { id: 4, name: "Lumina Necklace", price: 850, img: "images/jewellery-1.jpg", desc: "Sustainably lab-grown diamonds with smart haptic feedback." },
-            { id: 5, name: "Apex Sport Tee", price: 85, img: "images/sports-1.jpg", desc: "Moisture-wicking mesh with bio-metric sensor compatibility." },
-            { id: 6, name: "Stealth Perfume", price: 140, img: "images/perfume.jpg", desc: "A complex pheromone-based scent designed for the minimalist." },
-            { id: 7, name: "Nova Chrono 2", price: 540, img: "images/watch-2.jpg", desc: "Mechanical soul meets digital precision in this hybrid timepiece." },
-            { id: 8, name: "Nordic Parka", price: 620, img: "images/jacket-2.jpg", desc: "Sub-zero protection with ultra-lightweight thermal down." },
-            { id: 9, name: "Prism Shades", price: 210, img: "images/1.jpg", desc: "Augmented reality ready lenses with 100% UV protection." },
-            { id: 10, name: "Sonic Buds Case", price: 45, img: "images/shampoo.jpg", desc: "High-density polymer protection for your audio essentials." },
-            { id: 11, name: "Nova Belt G2", price: 110, img: "images/belt.jpg", desc: "Automatic micro-adjustment for the perfect fit every time." },
-            { id: 12, name: "Circuit Shirt", price: 120, img: "images/shirt-1.jpg", desc: "Antimicrobial silver-threaded fabric for 48-hour freshness." }
+            { id: 1, name: "Apex Smart Watch v4", price: 499, img: "watch-1.jpg", desc: "The pinnacle of NovaCart wearable technology with sapphire glass." },
+            { id: 2, name: "Nova Glide Runners", price: 180, img: "shoe-1.jpg", desc: "Gravity-defying comfort for the modern NovaCart athlete." },
+            { id: 3, name: "Stealth Tech Jacket", price: 320, img: "jacket-1.jpg", desc: "Waterproof, breathable, and equipped with heating elements." },
+            { id: 4, name: "Chrono Classic", price: 350, img: "watch-2.jpg", desc: "Timeless NovaCart elegance meets futuristic internals." },
+            { id: 5, name: "Urban Explorer Pack", price: 120, img: "sports-1.jpg", desc: "Modular storage for all your NovaCart essentials." },
+            { id: 6, name: "Luxe Essence", price: 95, img: "perfume.jpg", desc: "The signature scent of the NovaCart digital frontier." },
+            { id: 7, name: "Aero Shorts", price: 65, img: "shorts-1.jpg", desc: "Ultra-lightweight fabric for maximum performance." },
+            { id: 8, name: "Titanium Band", price: 85, img: "jewellery-1.jpg", desc: "Hypoallergenic aerospace-grade titanium NovaCart accessory." },
+            { id: 9, name: "Hybrid Knit Shirt", price: 110, img: "shirt-1.jpg", desc: "Smart-fabric that regulates temperature in real-time." },
+            { id: 10, name: "Quantum Sole Boots", price: 240, img: "shoe-2.jpg", desc: "Enhanced traction and biometric feedback sensors." },
+            { id: 11, name: "Midnight Blazer", price: 450, img: "jacket-2.jpg", desc: "Sharp aesthetics for the high-end NovaCart professional." },
+            { id: 12, name: "Zenith Pendant", price: 210, img: "jewellery-2.jpg", desc: "Minimalist NovaCart jewelry with an embedded NFC chip." }
         ];
 
         let cart = JSON.parse(localStorage.getItem('novacart_cart')) || [];
 
-        function init() {
-            renderProducts(products);
-            updateCartUI();
-            setupReveal();
-        }
+        // DOM Elements
+        const productGrid = document.getElementById('product-grid');
+        const cartBtn = document.getElementById('cart-btn');
+        const closeCart = document.getElementById('close-cart');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const cartTotal = document.getElementById('cart-total');
+        const cartCount = document.querySelector('.cart-count');
+        const searchInput = document.getElementById('search-input');
+        const themeBtn = document.getElementById('theme-btn');
+        const chatToggle = document.getElementById('chat-toggle');
+        const chatWindow = document.getElementById('chat-window');
+        const chatForm = document.getElementById('chat-form');
+        const chatMessages = document.getElementById('chat-messages');
 
-        function renderProducts(items) {
-            const grid = document.getElementById('productGrid');
-            grid.innerHTML = items.map(product => `
-                <div class="product-card reveal">
-                    <img src="${product.img}" alt="${product.name}" class="product-img">
+        // Functions
+        function renderProducts(filter = "") {
+            productGrid.innerHTML = "";
+            const filtered = products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+            
+            filtered.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <img src="images/${product.img}" alt="${product.name}" class="product-image">
                     <div class="product-info">
                         <h3>${product.name}</h3>
-                        <p class="product-desc">${product.desc}</p>
-                        <div class="product-price">$${product.price}</div>
-                        <button class="add-btn" onclick="addToCart(${product.id})">Add to Bag</button>
+                        <p>${product.desc}</p>
+                        <div class="price">$${product.price}</div>
+                        <button class="add-to-cart" onclick="addToCart(${product.id})">Add to NovaCart Bag</button>
                     </div>
-                </div>
-            `).join('');
-            setupReveal();
-        }
-
-        // Cart Functions
-        function toggleCart() {
-            document.getElementById('cartDrawer').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
+                `;
+                productGrid.appendChild(card);
+            });
         }
 
         function addToCart(id) {
             const product = products.find(p => p.id === id);
-            const existing = cart.find(item => item.id === id);
+            const exists = cart.find(item => item.id === id);
             
-            if (existing) {
-                existing.qty++;
+            if (exists) {
+                exists.qty++;
             } else {
                 cart.push({ ...product, qty: 1 });
             }
+            updateCart();
+            openCartDrawer();
+        }
+
+        function updateCart() {
+            localStorage.setItem('novacart_cart', JSON.stringify(cart));
+            renderCart();
+            updateCount();
+        }
+
+        function renderCart() {
+            cartItemsContainer.innerHTML = "";
+            let total = 0;
             
-            saveCart();
-            updateCartUI();
-            if(!document.getElementById('cartDrawer').classList.contains('active')) toggleCart();
+            cart.forEach(item => {
+                total += item.price * item.qty;
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <img src="images/${item.img}" alt="${item.name}">
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <div class="price">$${item.price}</div>
+                        <div class="qty-controls">
+                            <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+                            <span>${item.qty}</span>
+                            <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                        </div>
+                    </div>
+                    <button style="background:none; border:none; color:red; cursor:pointer;" onclick="removeItem(${item.id})">✕</button>
+                `;
+                cartItemsContainer.appendChild(div);
+            });
+            
+            cartTotal.innerText = `$${total.toFixed(2)}`;
         }
 
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
-            saveCart();
-            updateCartUI();
+        function updateCount() {
+            const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+            cartCount.innerText = totalItems;
         }
 
-        function updateQty(id, delta) {
+        function changeQty(id, delta) {
             const item = cart.find(i => i.id === id);
             if (item) {
                 item.qty += delta;
-                if (item.qty < 1) return removeFromCart(id);
-                saveCart();
-                updateCartUI();
+                if (item.qty < 1) removeItem(id);
+                else updateCart();
             }
         }
 
-        function saveCart() {
-            localStorage.setItem('novacart_cart', JSON.stringify(cart));
+        function removeItem(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCart();
         }
 
-        function updateCartUI() {
-            const container = document.getElementById('cartItems');
-            const count = document.getElementById('cartCount');
-            const total = document.getElementById('cartTotal');
-            
-            let totalItems = 0;
-            let totalPrice = 0;
-            
-            container.innerHTML = cart.map(item => {
-                totalItems += item.qty;
-                totalPrice += (item.price * item.qty);
-                return `
-                    <div class="cart-item">
-                        <img src="${item.img}" class="cart-item-img">
-                        <div class="cart-item-info">
-                            <h4>${item.name}</h4>
-                            <p>$${item.price}</p>
-                            <div class="qty-controls">
-                                <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
-                                <span>${item.qty}</span>
-                                <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
-                            </div>
-                        </div>
-                        <span style="cursor:pointer" onclick="removeFromCart(${item.id})">✕</span>
-                    </div>
-                `;
-            }).join('');
-            
-            if (cart.length === 0) {
-                container.innerHTML = `<p style="text-align:center; opacity:0.5; margin-top:50px;">Your NovaCart is empty.</p>`;
-            }
+        function openCartDrawer() { cartOverlay.classList.add('active'); }
+        function closeCartDrawer() { cartOverlay.classList.remove('active'); }
 
-            count.innerText = totalItems;
-            total.innerText = `$${totalPrice.toFixed(2)}`;
-        }
-
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = products.filter(p => 
-                p.name.toLowerCase().includes(term) || 
-                p.desc.toLowerCase().includes(term)
-            );
-            renderProducts(filtered);
+        // Event Listeners
+        cartBtn.addEventListener('click', openCartDrawer);
+        closeCart.addEventListener('click', closeCartDrawer);
+        
+        searchInput.addEventListener('input', (e) => {
+            renderProducts(e.target.value);
         });
 
-        // Theme Toggle
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            const target = current === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', target);
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('novacart_theme', isDark ? 'dark' : 'light');
         });
 
-        // Reveal Animation logic
-        function setupReveal() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.1 });
+        // Chatbot Logic
+        chatToggle.addEventListener('click', () => {
+            chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+        });
 
-            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('chat-input-field');
+            const msg = input.value.trim();
+            if(!msg) return;
+
+            // User message
+            const userMsg = document.createElement('div');
+            userMsg.style.textAlign = 'right';
+            userMsg.style.margin = '10px 0';
+            userMsg.innerHTML = `<span style="background:var(--accent); color:white; padding:8px 12px; border-radius:15px 15px 0 15px; display:inline-block;">${msg}</span>`;
+            chatMessages.appendChild(userMsg);
+            input.value = "";
+
+            // Bot response
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.style.margin = '10px 0';
+                let response = "That's a great question about NovaCart! Our specialists are currently offline, but you can explore our 2026 collection in the shop section.";
+                if(msg.toLowerCase().includes('watch')) response = "Our NovaCart Apex Watch is currently our best-seller. It features 72-hour battery life!";
+                if(msg.toLowerCase().includes('shoe')) response = "NovaCart footwear uses adaptive cushioning technology for maximum comfort.";
+                
+                botMsg.innerHTML = `<span style="background:var(--card-bg); color:var(--text); padding:8px 12px; border-radius:15px 15px 15px 0; display:inline-block; border:1px solid var(--border)">${response}</span>`;
+                chatMessages.appendChild(botMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+        });
+
+        // Initial Theme Load
+        if (localStorage.getItem('novacart_theme') === 'dark') {
+            document.body.classList.add('dark-mode');
         }
 
-        // Init on load
-        window.onload = init;
+        // Initialize
+        renderProducts();
+        updateCart();
 
+        // Reveal animations on scroll
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.style.opacity = "0";
+            card.style.transform = "translateY(30px)";
+            card.style.transition = "1s var(--transition)";
+            observer.observe(card);
+        });
     </script>
 </body>
 </html>
