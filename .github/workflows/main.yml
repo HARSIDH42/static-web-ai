@@ -83,6 +83,7 @@ jobs:
           - Give description to the products
           - functionality common for all e-commerce websites
           - add a query ai chat bot with gemini api
+          - include belt
 
           DESIGN
           - Light mode and Dark mode
