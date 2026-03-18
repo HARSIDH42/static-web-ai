@@ -36,7 +36,18 @@ jobs:
           from pathlib import Path
           from google import genai
 
-          prompt = """
+          # Collect available images
+          image_dir = Path("images")
+          image_list = []
+
+          if image_dir.exists():
+              for img in image_dir.iterdir():
+                  if img.suffix.lower() in [".png", ".jpg", ".jpeg", ".webp"]:
+                      image_list.append(img.name)
+
+          image_list_text = "\n".join(image_list) if image_list else "No images available"
+
+          prompt = f"""
           ROLE
           You are a senior frontend engineer building a premium 2026 modern e-commerce storefront.
 
@@ -69,8 +80,8 @@ jobs:
           - No page reload
           - Vanilla JavaScript only
           - All JS inside <script>
-          - Give discription to the products
-          - functionality that is common for all e-commerce websites
+          - Give description to the products
+          - functionality common for all e-commerce websites
 
           DESIGN
           - Light mode and Dark mode
@@ -97,13 +108,13 @@ jobs:
               print("Gemini returned empty response")
               exit(1)
 
-          # Remove markdown formatting if Gemini adds it
+          # Clean markdown if present
           html = html.replace("```html", "").replace("```", "").strip()
 
           # Write index.html
           Path("index.html").write_text(html, encoding="utf-8")
 
-          # Git configuration
+          # Git config
           subprocess.run(["git","config","--global","user.name","gemini-bot"])
           subprocess.run(["git","config","--global","user.email","bot@example.com"])
 
@@ -128,6 +139,7 @@ jobs:
       - name: Deploy to S3
         run: |
           aws s3 sync . s3://staticwebzsitegit \
-            --exclude ".git/*" \
-            --exclude ".github/*" \
+            --exclude "*" \
+            --include "index.html" \
+            --include "images/*" \
             --delete
