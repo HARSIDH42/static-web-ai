@@ -83,7 +83,7 @@ jobs:
           - Give description to the products
           - functionality common for all e-commerce websites
           - add darkmode switch
-          - add a chatbot using gemini
+          - add a chatbot for choosing the right product
 
           DESIGN
           - Light mode and Dark mode
