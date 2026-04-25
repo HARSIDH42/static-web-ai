@@ -82,7 +82,7 @@ jobs:
           - All JS inside <script>
           - Give description to the products
           - functionality common for all e-commerce websites
-          - add a chatbot using gemini ai
+          - add darkmode switch
 
           DESIGN
           - Light mode and Dark mode
