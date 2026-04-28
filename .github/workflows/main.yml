@@ -138,7 +138,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Deploy to S3
+      - name: AgroCD
         run: |
           aws s3 sync . s3://staticwebzsitegit \
             --exclude "*" \
