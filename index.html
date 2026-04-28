@@ -3,112 +3,729 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NovaCart offers premium smart gadgets. Explore our exclusive collection of high-tech apparel and accessories.">
-    <title>NovaCart | Premium Smart Gadgets</title>
+    <title>NovaCart | Premium Tech & Lifestyle</title>
     <style>
-        :root { --bg: #000; --text: #fff; --accent: #0071e3; --glass: rgba(255,255,255,0.1); }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; }
-        
-        header { position: sticky; top: 0; padding: 20px 5%; backdrop-filter: blur(20px); background: rgba(0,0,0,0.8); display: flex; justify-content: space-between; align-items: center; z-index: 1000; border-bottom: 1px solid #333; }
-        
-        .hero { height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 20px; }
-        .hero h1 { font-size: 3rem; margin-bottom: 10px; }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; padding: 40px 5%; max-width: 1400px; margin: auto; }
-        .card { background: #111; border-radius: 20px; padding: 20px; transition: transform 0.2s; border: 1px solid #222; }
-        .card:hover { transform: translateY(-5px); border-color: #444; }
-        .card img { width: 100%; height: 250px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; background: #222; }
-        
-        button { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 25px; cursor: pointer; font-weight: 600; transition: opacity 0.2s; }
-        button:hover { opacity: 0.9; }
-        
-        #cart-drawer { position: fixed; right: -400px; top: 0; width: 350px; height: 100%; background: #111; padding: 25px; transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000; box-shadow: -10px 0 30px rgba(0,0,0,0.5); overflow-y: auto; }
-        .cart-open { right: 0 !important; }
-        .cart-item { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #333; }
-        
-        .chat-btn { position: fixed; bottom: 30px; right: 30px; background: var(--accent); padding: 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 4px 12px rgba(0,113,227,0.3); z-index: 1000; }
-        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } #cart-drawer { width: 100%; } }
+        :root {
+            --bg: #ffffff;
+            --text: #000000;
+            --accent: #0071e3;
+            --glass: rgba(255, 255, 255, 0.7);
+            --card-bg: #f5f5f7;
+            --border: #d2d2d7;
+            --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #000000;
+            --text: #f5f5f7;
+            --accent: #2997ff;
+            --glass: rgba(0, 0, 0, 0.7);
+            --card-bg: #1d1d1f;
+            --border: #424245;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 60px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            cursor: pointer;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        #search-input {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 15px;
+            border-radius: 20px;
+            width: 200px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        #search-input:focus {
+            width: 300px;
+            border-color: var(--accent);
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: var(--accent);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: radial-gradient(circle at center, var(--card-bg) 0%, var(--bg) 100%);
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 20px;
+            background: linear-gradient(180deg, var(--text) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            padding: 15px 40px;
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        /* Product Grid */
+        .section-title {
+            padding: 100px 5% 40px;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+            padding: 0 5% 100px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 30px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .product-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .product-info p {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .add-to-cart {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--text);
+            background: transparent;
+            color: var(--text);
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .add-to-cart:hover {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        /* Cart Drawer */
+        #cart-drawer {
+            position: fixed;
+            right: -450px;
+            top: 0;
+            width: 450px;
+            height: 100vh;
+            background: var(--bg);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+            z-index: 1100;
+            transition: var(--transition);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #cart-drawer.open {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .cart-items {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+        }
+
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .qty-btn {
+            background: var(--card-bg);
+            border: none;
+            color: var(--text);
+            width: 25px;
+            height: 25px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cart-footer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Chatbot */
+        #chatbot-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 900;
+        }
+
+        #chatbot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 450px;
+            background: var(--bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 900;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: var(--accent);
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            font-size: 0.9rem;
+        }
+
+        .bot { background: var(--card-bg); align-self: flex-start; }
+        .user { background: var(--accent); color: white; align-self: flex-end; }
+
+        .chat-input {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        /* Overlay */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1050;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #cart-drawer { width: 100%; right: -100%; }
+            #search-input { width: 100px; }
+            #search-input:focus { width: 150px; }
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>NovaCart</h1>
-    <nav>
-        <button aria-label="Open Cart" onclick="toggleCart()">Bag (<span id="cart-count">0</span>)</button>
-    </nav>
-</header>
+    <div id="overlay"></div>
 
-<section class="hero">
-    <h1>Future of Tech</h1>
-    <p>Premium gadgets designed for the next generation.</p>
-</section>
-
-<main class="grid" id="product-grid"></main>
-
-<aside id="cart-drawer" aria-hidden="true">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h2>Your Bag</h2>
-        <button onclick="toggleCart()">✕</button>
-    </div>
-    <div id="cart-items" style="margin: 20px 0;"></div>
-    <div id="cart-total" style="font-weight: bold;"></div>
-</aside>
-
-<div class="chat-btn" onclick="initChat()" role="button" aria-label="Chat with Support">💬</div>
-
-<script>
-    const products = [
-        { id: 1, name: 'Premium Watch', price: 29999, img: 'https://via.placeholder.com/300?text=Watch' },
-        { id: 2, name: 'Tech Jacket', price: 8999, img: 'https://via.placeholder.com/300?text=Jacket' },
-        { id: 3, name: 'Smart Shoe', price: 12500, img: 'https://via.placeholder.com/300?text=Shoe' }
-    ];
-
-    let cart = [];
-
-    function renderProducts() {
-        const grid = document.getElementById('product-grid');
-        grid.innerHTML = products.map(p => `
-            <article class="card">
-                <img src="${p.img}" alt="${p.name}" loading="lazy">
-                <h3>${p.name}</h3>
-                <p>₹${p.price.toLocaleString()}</p>
-                <button onclick="addToCart(${p.id})">Add to Bag</button>
-            </article>
-        `).join('');
-    }
-
-    function addToCart(id) {
-        const item = products.find(p => p.id === id);
-        cart.push(item);
-        document.getElementById('cart-count').innerText = cart.length;
-        updateCartDrawer();
-    }
-
-    function updateCartDrawer() {
-        const list = document.getElementById('cart-items');
-        const total = cart.reduce((sum, item) => sum + item.price, 0);
-        list.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <span>${item.name}</span>
-                <span>₹${item.price.toLocaleString()}</span>
+    <header>
+        <div class="logo">NovaCart</div>
+        <div class="nav-actions">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search tech...">
             </div>
-        `).join('');
-        document.getElementById('cart-total').innerHTML = `Total: ₹${total.toLocaleString()}`;
-    }
+            <button class="icon-btn" id="theme-toggle">🌓</button>
+            <button class="icon-btn" id="cart-btn">
+                🛒 <span class="cart-count" id="cart-counter">0</span>
+            </button>
+        </div>
+    </header>
 
-    function toggleCart() {
-        const drawer = document.getElementById('cart-drawer');
-        drawer.classList.toggle('cart-open');
-        drawer.setAttribute('aria-hidden', drawer.classList.contains('cart-open') ? 'false' : 'true');
-    }
+    <section class="hero">
+        <h1>NovaCart 2026</h1>
+        <p>The next generation of smart tech accessories. Engineered for the future, designed for you.</p>
+        <a href="#products" class="cta-button">Explore Collection</a>
+    </section>
 
-    function initChat() {
-        alert("Chatbot: Hello! How can I assist you with your order today?");
-    }
+    <h2 class="section-title" id="products">Featured NovaCart Gadgets</h2>
+    <div class="product-grid" id="product-display">
+        <!-- Products will be injected here -->
+    </div>
 
-    document.addEventListener('DOMContentLoaded', renderProducts);
-</script>
+    <!-- Cart Drawer -->
+    <div id="cart-drawer">
+        <div class="cart-header">
+            <h2>Your Bag</h2>
+            <button class="icon-btn" id="close-cart">✕</button>
+        </div>
+        <div class="cart-items" id="cart-items-container">
+            <!-- Cart items will be injected here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cart-total-amount">$0.00</span>
+            </div>
+            <button class="checkout-btn">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div id="chatbot-btn">💬</div>
+    <div id="chatbot-window">
+        <div class="chat-header">NovaCart Assistant</div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">Hello! Welcome to NovaCart. How can I help you find the perfect gadget today?</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chat-input-field" placeholder="Ask NovaCart...">
+            <button class="icon-btn" id="send-chat">➔</button>
+        </div>
+    </div>
+
+    <footer style="padding: 100px 5%; background: var(--card-bg); margin-top: 100px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 50px;">
+            <div>
+                <h3 style="margin-bottom: 20px;">NovaCart</h3>
+                <p style="opacity: 0.6;">Redefining the digital lifestyle through premium hardware.</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 20px;">Shop</h4>
+                <p style="opacity: 0.6; cursor: pointer; margin-bottom: 10px;">Smart Watches</p>
+                <p style="opacity: 0.6; cursor: pointer; margin-bottom: 10px;">Audio Gear</p>
+                <p style="opacity: 0.6; cursor: pointer; margin-bottom: 10px;">Tech Wear</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 20px;">Support</h4>
+                <p style="opacity: 0.6; cursor: pointer; margin-bottom: 10px;">Order Status</p>
+                <p style="opacity: 0.6; cursor: pointer; margin-bottom: 10px;">Returns</p>
+                <p style="opacity: 0.6; cursor: pointer; margin-bottom: 10px;">NovaCare+</p>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 80px; opacity: 0.4; font-size: 0.8rem;">
+            &copy; 2026 NovaCart Technologies. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Product Data
+        const products = [
+            { id: 1, name: "NovaCart Watch Elite", price: 499, img: "watch-1.jpg", desc: "Titanium casing with 72-hour battery life and advanced health sensors." },
+            { id: 2, name: "Aura Smart Perfume", price: 120, img: "perfume.jpg", desc: "A scent that adapts to your body temperature throughout the day." },
+            { id: 3, name: "Cortex Jacket v2", price: 350, img: "jacket-1.jpg", desc: "Self-heating tech fabric with integrated haptic notification systems." },
+            { id: 4, name: "Sonic Strides 1.0", price: 280, img: "shoe-1.jpg", desc: "Active-cushioning footwear with pressure-point mapping." },
+            { id: 5, name: "NovaCart Vision Pro", price: 899, img: "watch-4.jpg", desc: "Augmented reality interface built into a sleek wrist-mounted unit." },
+            { id: 6, name: "Zenith Tech Shirt", price: 95, img: "shirt-1.jpg", desc: "Moisture-wicking fabric that monitors hydration levels." },
+            { id: 7, name: "Titanium Band 4", price: 150, img: "watch-2.jpg", desc: "Minimalist fitness tracker with a liquid-metal display." },
+            { id: 8, name: "Hydro-Mist Shampoo", price: 45, img: "shampoo.jpg", desc: "Nanotech formula for scalp health and follicles strengthening." },
+            { id: 9, name: "Carbon Fiber Belt", price: 110, img: "belt.jpg", desc: "Ultra-durable, micro-adjusting belt with hidden NFC chip." },
+            { id: 10, name: "Neural Sports Set", price: 180, img: "sports-1.jpg", desc: "Compressive gear that stimulates muscle recovery via micro-currents." },
+            { id: 11, name: "Apex Chrono", price: 620, img: "watch-3.jpg", desc: "Precision mechanical engineering meets modern digital connectivity." },
+            { id: 12, name: "Glacier Parka", price: 550, img: "jacket-4.jpg", desc: "Tested in Arctic conditions. Integrated GPS and emergency SOS." },
+            { id: 13, name: "Lunar Kicks", price: 320, img: "shoe-5.jpg", desc: "Gravity-defying foam tech for the ultimate urban explorer." },
+            { id: 14, name: "Prism Jewel Link", price: 210, img: "jewellery-1.jpg", desc: "Smart jewelry that glows when you receive VIP notifications." },
+            { id: 15, name: "Vector Shorts", price: 85, img: "shorts-1.jpg", desc: "Lightweight, laser-cut shorts for high-intensity training." }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('novacart-cart')) || [];
+
+        // DOM Elements
+        const productGrid = document.getElementById('product-display');
+        const cartBtn = document.getElementById('cart-btn');
+        const cartDrawer = document.getElementById('cart-drawer');
+        const closeCart = document.getElementById('close-cart');
+        const overlay = document.getElementById('overlay');
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const cartCounter = document.getElementById('cart-counter');
+        const cartTotalAmount = document.getElementById('cart-total-amount');
+        const themeToggle = document.getElementById('theme-toggle');
+        const searchInput = document.getElementById('search-input');
+        const chatBtn = document.getElementById('chatbot-btn');
+        const chatWindow = document.getElementById('chatbot-window');
+        const chatInputField = document.getElementById('chat-input-field');
+        const sendChat = document.getElementById('send-chat');
+        const chatMessages = document.getElementById('chat-messages');
+
+        // Functions
+        function renderProducts(filter = '') {
+            productGrid.innerHTML = '';
+            const filtered = products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+            
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div>
+                        <img src="images/${p.img}" alt="${p.name}" class="product-image">
+                        <div class="product-info">
+                            <h3>${p.name}</h3>
+                            <p>${p.desc}</p>
+                            <div class="product-price">$${p.price}</div>
+                        </div>
+                    </div>
+                    <button class="add-to-cart" onclick="addToCart(${p.id})">Add to Bag</button>
+                `;
+                productGrid.appendChild(card);
+            });
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const exists = cart.find(item => item.id === id);
+            
+            if (exists) {
+                exists.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            
+            saveCart();
+            updateCartUI();
+            openCartDrawer();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            saveCart();
+            updateCartUI();
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    removeFromCart(id);
+                } else {
+                    saveCart();
+                    updateCartUI();
+                }
+            }
+        }
+
+        function saveCart() {
+            localStorage.setItem('novacart-cart', JSON.stringify(cart));
+        }
+
+        function updateCartUI() {
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            let count = 0;
+
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                count += item.quantity;
+                
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <img src="images/${item.img}" alt="${item.name}">
+                    <div class="cart-item-details">
+                        <h4>${item.name}</h4>
+                        <p>$${item.price}</p>
+                        <div class="cart-item-qty">
+                            <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                        </div>
+                    </div>
+                    <button class="icon-btn" onclick="removeFromCart(${item.id})">✕</button>
+                `;
+                cartItemsContainer.appendChild(div);
+            });
+
+            cartCounter.innerText = count;
+            cartTotalAmount.innerText = `$${total.toFixed(2)}`;
+        }
+
+        function openCartDrawer() {
+            cartDrawer.classList.add('open');
+            overlay.style.display = 'block';
+        }
+
+        function closeCartDrawer() {
+            cartDrawer.classList.remove('open');
+            overlay.style.display = 'none';
+        }
+
+        // Chatbot Logic
+        function handleChat() {
+            const text = chatInputField.value.trim();
+            if (!text) return;
+
+            appendMessage('user', text);
+            chatInputField.value = '';
+
+            setTimeout(() => {
+                let response = "I'm not sure about that. Try asking about 'watches', 'jackets', or 'shoes'!";
+                const lowerText = text.toLowerCase();
+                
+                if (lowerText.includes('watch')) {
+                    response = "The NovaCart Watch Elite is our best seller. It's built with aerospace titanium!";
+                } else if (lowerText.includes('jacket') || lowerText.includes('wear')) {
+                    response = "Our Cortex Jackets are phenomenal. They feature active climate control.";
+                } else if (lowerText.includes('shoe')) {
+                    response = "You'll love the Lunar Kicks—they offer 40% more energy return than standard shoes.";
+                } else if (lowerText.includes('hello') || lowerText.includes('hi')) {
+                    response = "Welcome to the future of retail! How can I assist you with NovaCart today?";
+                }
+                
+                appendMessage('bot', response);
+            }, 800);
+        }
+
+        function appendMessage(sender, text) {
+            const msg = document.createElement('div');
+            msg.className = `message ${sender}`;
+            msg.innerText = text;
+            chatMessages.appendChild(msg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Event Listeners
+        cartBtn.addEventListener('click', openCartDrawer);
+        closeCart.addEventListener('click', closeCartDrawer);
+        overlay.addEventListener('click', () => {
+            closeCartDrawer();
+            chatWindow.style.display = 'none';
+        });
+
+        themeToggle.addEventListener('click', () => {
+            const body = document.body;
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+            }
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            renderProducts(e.target.value);
+        });
+
+        chatBtn.addEventListener('click', () => {
+            chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        sendChat.addEventListener('click', handleChat);
+        chatInputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleChat();
+        });
+
+        // Initialize NovaCart
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            updateCartUI();
+        });
+
+        // Smooth Scroll for CTA
+        document.querySelector('.cta-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    </script>
 </body>
 </html>
