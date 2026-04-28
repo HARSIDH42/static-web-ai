@@ -84,6 +84,7 @@ jobs:
           - functionality common for all e-commerce websites
           - add darkmode switch
           - add a chatbot for choosing the right product
+          - give as indian currency
 
           DESIGN
           - Light mode and Dark mode
