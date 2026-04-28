@@ -1,4 +1,4 @@
-name: Gemini AI Code Generation, Review, Testing & Deploy
+name: Gemini AI Auto Commit and Deploy
 
 on:
   push:
@@ -12,6 +12,7 @@ jobs:
       contents: write
 
     steps:
+
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -22,15 +23,10 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Dependencies
-        run: |
-          pip install --upgrade google-genai beautifulsoup4
-          npm install -g htmlhint eslint jest
+      - name: Install Gemini SDK
+        run: pip install --upgrade google-genai
 
-      # -----------------------------------
-      # AI CODE GENERATION
-      # -----------------------------------
-      - name: Generate Website with Gemini AI
+      - name: Generate Website with Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
@@ -40,6 +36,7 @@ jobs:
           from pathlib import Path
           from google import genai
 
+          # Collect available images
           image_dir = Path("images")
           image_list = []
 
@@ -51,218 +48,89 @@ jobs:
           image_list_text = "\n".join(image_list) if image_list else "No images available"
 
           prompt = f"""
-          ROLE:
-          You are a senior frontend engineer creating a futuristic premium e-commerce storefront.
+          ROLE
+          You are a senior frontend engineer building a premium 2026 modern e-commerce storefront.
 
-          BRAND:
+          GOAL
+          Create a LONG, visually rich, scroll-heavy premium website like Apple / Tesla / Nothing.
+          
+          BRAND NAME
           NovaCart
 
-          PRODUCTS:
-          Premium smart gadgets and accessories.
+          WEBSITE IDEA
+          A premium Smart Gadgets Store selling modern tech accessories.
 
-          AVAILABLE IMAGES:
+          AVAILABLE IMAGES
           {image_list_text}
+          
+          IMAGE RULES
+          - Use ONLY these images
+          - Path: images/FILENAME
+          - Do NOT invent images
 
-          STRICT RULES:
-          - Use only listed images
-          - Path format: images/FILENAME
-          - Do not invent assets
-          - Replace 'page' with 'NovaCart'
+          IMPORTANT RULES
+          - Replace every instance of "page" with "NovaCart"
 
-          FEATURES:
-          - Add to Bag
+          FUNCTIONALITY
+          - Add to Bag (localStorage)
           - Live cart counter
-          - Cart drawer
-          - Quantity controls
-          - Search filtering
-          - Dark mode
-          - Product descriptions
-          - Chatbot
-          - INR pricing
-          - Fully responsive
-          - Vanilla JS only
+          - Animated cart drawer
+          - Quantity increment & removal
+          - Live search filtering
+          - No page reload
+          - Vanilla JavaScript only
           - All JS inside <script>
+          - Give description to the products
+          - functionality common for all e-commerce websites
+          - add darkmode switch
+          - add a chatbot for choosing the right product
 
-          DESIGN:
-          - Apple/Tesla style
-          - Glassmorphism header
-          - Hero sections
-          - Premium UI
-          - Modern animations
-
-          OUTPUT:
-          Return only complete production-ready index.html
+          DESIGN
+          - Light mode and Dark mode
+          - Large hero section
+          - Glassmorphism sticky header
+          - Responsive CSS grid
+          - Modern typography
+          - Premium minimalist layout
+          
+          OUTPUT
+          Return ONLY a complete working index.html file.
           """
 
           client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
           response = client.models.generate_content(
-              model="gemini-3.1-flash-lite-preview",
+              model="gemini-3-flash-preview",
               contents=prompt
           )
 
           html = response.text
 
           if not html:
-              raise Exception("Gemini returned empty response")
+              print("Gemini returned empty response")
+              exit(1)
 
+          # Clean markdown if present
           html = html.replace("```html", "").replace("```", "").strip()
 
+          # Write index.html
           Path("index.html").write_text(html, encoding="utf-8")
 
-          print("AI code generation completed.")
+          # Git config
+          subprocess.run(["git","config","--global","user.name","gemini-bot"])
+          subprocess.run(["git","config","--global","user.email","bot@example.com"])
+
+          subprocess.run(["git","add","index.html"])
+
+          result = subprocess.run(["git","diff","--cached","--quiet"])
+
+          if result.returncode != 0:
+              subprocess.run(["git","commit","-m","Gemini AI generated NovaCart UI"])
+              subprocess.run(["git","push"])
+          else:
+              print("No changes detected")
           EOF
 
-      # -----------------------------------
-      # AI CODE REVIEW + BUG DETECTION
-      # -----------------------------------
-      - name: AI Review and Bug Fix
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: |
-          python << 'EOF'
-          import os
-          from pathlib import Path
-          from google import genai
-
-          html_code = Path("index.html").read_text(encoding="utf-8")
-
-          review_prompt = f"""
-          ROLE:
-          You are an expert software architect and QA engineer.
-
-          TASK:
-          Review this website code and:
-          - Detect bugs
-          - Fix broken JS
-          - Improve performance
-          - Improve UI/UX
-          - Improve SEO
-          - Improve accessibility
-          - Validate responsiveness
-          - Ensure all e-commerce functions work
-          - Improve chatbot logic
-          - Optimize code quality
-
-          OUTPUT:
-          Return only corrected production-ready HTML.
-
-          CODE:
-          {html_code}
-          """
-
-          client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
-
-          response = client.models.generate_content(
-              model="gemini-3.1-flash-lite-preview",
-              contents=review_prompt
-          )
-
-          improved_html = response.text.replace("```html", "").replace("```", "").strip()
-
-          Path("index.html").write_text(improved_html, encoding="utf-8")
-
-          print("AI review and bug fixing completed.")
-          EOF
-
-      # -----------------------------------
-      # STATIC VALIDATION
-      # -----------------------------------
-      - name: Validate HTML
-        run: htmlhint index.html
-
-      - name: Extract JavaScript
-        run: |
-          python << 'EOF'
-          from bs4 import BeautifulSoup
-          from pathlib import Path
-
-          html = Path("index.html").read_text(encoding="utf-8")
-          soup = BeautifulSoup(html, "html.parser")
-
-          scripts = soup.find_all("script")
-          js_code = "\n".join(script.get_text() for script in scripts)
-
-          Path("script.js").write_text(js_code, encoding="utf-8")
-          print("JavaScript extracted.")
-          EOF
-
-      - name: Lint JavaScript
-        run: eslint script.js || true
-
-      # -----------------------------------
-      # AI TEST GENERATION
-      # -----------------------------------
-      - name: Generate Automated Tests
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: |
-          python << 'EOF'
-          import os
-          from pathlib import Path
-          from google import genai
-
-          code = Path("index.html").read_text(encoding="utf-8")
-
-          test_prompt = f"""
-          ROLE:
-          You are a senior QA automation engineer.
-
-          TASK:
-          Generate Jest test cases for:
-          - Cart add/remove
-          - Search
-          - Dark mode
-          - Chatbot
-          - Quantity update
-          - Mobile responsiveness
-          - Navigation
-          - Checkout flow
-
-          OUTPUT:
-          Return only valid JavaScript Jest test code.
-
-          WEBSITE CODE:
-          {code}
-          """
-
-          client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
-
-          response = client.models.generate_content(
-              model="gemini-3.1-flash-lite-preview",
-              contents=test_prompt
-          )
-
-          tests = response.text.replace("```javascript", "").replace("```", "").strip()
-
-          Path("site.test.js").write_text(tests, encoding="utf-8")
-
-          print("AI test generation completed.")
-          EOF
-
-      - name: Run Automated Tests
-        run: jest site.test.js || true
-
-      # -----------------------------------
-      # AUTO COMMIT IMPROVED CODE
-      # -----------------------------------
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name "gemini-bot"
-          git config --global user.email "bot@example.com"
-
-          git add index.html site.test.js script.js
-
-          if ! git diff --cached --quiet; then
-            git commit -m "Gemini AI generated, reviewed, fixed, and tested NovaCart"
-            git push
-          else
-            echo "No changes detected"
-          fi
-
-      # -----------------------------------
-      # AWS DEPLOYMENT
-      # -----------------------------------
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -270,7 +138,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Deploy to AWS S3
+      - name: AgroCD
         run: |
           aws s3 sync . s3://staticwebzsitegit \
             --exclude "*" \
